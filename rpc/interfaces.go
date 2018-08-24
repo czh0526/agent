@@ -1,6 +1,6 @@
 package rpc
 
 type Server interface {
-	Start()
+	Start() error
 	Stop() error
 }

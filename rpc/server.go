@@ -17,29 +17,33 @@ func NewServer() Server {
 	}
 }
 
-func (self *RPCServer) Start() {
+func (self *RPCServer) Start() error {
 	go self.loop()
+	return nil
 }
 
 func (self *RPCServer) loop() {
 	self.running = true
+
 	for {
 		if !self.running {
 			break
 		}
 
-		fmt.Println("RPCServer::Start().")
+		fmt.Println("[RPCServer] -> loop(): is running.")
 
 		select {
 		case <-self.quit:
-			self.running = false
-		case <-time.After(time.Second * 2):
+			break
+		case <-time.After(time.Second * 10):
 		}
 	}
+	fmt.Println("RPCServer::loop() is exited.")
 }
 
 func (self *RPCServer) Stop() error {
 	fmt.Println("RPCServer:Stop()")
+	self.running = false
 	self.quit <- struct{}{}
 	return nil
 }

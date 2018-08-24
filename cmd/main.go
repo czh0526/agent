@@ -23,6 +23,7 @@ func init() {
 				return err
 			}
 		}
+		time.Sleep(time.Second * 2)
 		return nil
 	}
 }
@@ -37,6 +38,7 @@ func main() {
 func startAgent(ctx *cli.Context) error {
 	var err error
 
+	fmt.Println("main.Action begin.")
 	// 构建 Agent
 	if globalAgent, err = makeAgent(ctx); err != nil {
 		return err
@@ -48,8 +50,8 @@ func startAgent(ctx *cli.Context) error {
 	}
 
 	// 持续运行 10 秒
-	<-time.After(time.Second * 10)
-	fmt.Println("noop")
+	globalAgent.Wait()
+	fmt.Println("main.Action end.")
 
 	return nil
 }
