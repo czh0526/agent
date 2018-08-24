@@ -18,6 +18,10 @@ const NodeIDBits = 512
 
 type NodeID [NodeIDBits / 8]byte
 
+func (n NodeID) String() string {
+	return fmt.Sprintf("%x", n[:])
+}
+
 type Node struct {
 	IP       net.IP
 	UDP, TCP uint16
