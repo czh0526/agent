@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	defaultDialTimeout = 15 * time.Second
 	maxActiveDialTasks = 16
 )
 
@@ -79,6 +80,10 @@ func (self *P2PServer) Start() error {
 	}
 	fmt.Printf("self NodeID = %v \n", discover.PubkeyID(&privateKey.PublicKey).String())
 
+	if self.dialer == nil {
+		self.dialer = TCPDialer{&net.Dialer{Timeout: defaultDialTimeout}}
+	}
+
 	cfg := discover.Config{
 		PrivateKey:   privateKey,
 		AnnounceAddr: realaddr,
@@ -98,8 +103,8 @@ func (self *P2PServer) Start() error {
 
 	// 启动 tcp 拨号例程
 	self.loopWG.Add(1)
-	dialer := newDialState(bootnodes, self.ntab, 15)
-	go self.run(dialer)
+	dialstate := newDialState(bootnodes, self.ntab, 15)
+	go self.run(dialstate)
 
 	return nil
 }

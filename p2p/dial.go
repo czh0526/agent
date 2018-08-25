@@ -38,6 +38,15 @@ type NodeDialer interface {
 	Dial(*discover.Node) (net.Conn, error)
 }
 
+type TCPDialer struct {
+	*net.Dialer
+}
+
+func (t TCPDialer) Dial(dest *discover.Node) (net.Conn, error) {
+	addr := &net.TCPAddr{IP: dest.IP, Port: int(dest.TCP)}
+	return t.Dialer.Dial("tcp", addr.String())
+}
+
 type dialHistory []pastDial
 
 type pastDial struct {
@@ -107,10 +116,6 @@ func newDialState(bootnodes []*discover.Node, ntab discoverTable, maxdyn int) *d
 	}
 	copy(s.bootnodes, bootnodes)
 	return s
-}
-
-func (self *dialstate) Dial() NodeDialer {
-	return nil
 }
 
 type dialError struct {
