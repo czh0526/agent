@@ -155,6 +155,7 @@ running:
 			fmt.Printf("[P2PServer] -> listenLoop(): error occur —— %v \n", err)
 			break running
 		}
+		fmt.Printf("[P2PServer] => listenLoop(): get a conn from %v", fd.LocalAddr())
 
 		go func() {
 			self.SetupConn(fd, inboundConn, nil)
