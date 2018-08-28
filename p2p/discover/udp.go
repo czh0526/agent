@@ -152,7 +152,6 @@ func (t *udp) readLoop() {
 	// udp 包的最大尺寸
 	buf := make([]byte, 1280)
 	for {
-		fmt.Println("[udp] -> readLoop(): read From UDP ...")
 		nbytes, from, err := t.conn.ReadFromUDP(buf)
 		if err != nil {
 			fmt.Printf("udp -> readLoop: read error: %v \n", err)
@@ -171,14 +170,14 @@ func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
 		return err
 	}
 
-	printPacket(fromID, packet)
+	printPacket("[udp]: <<", fromID, packet)
 
 	err = packet.handle(t, from, fromID, hash)
 	return err
 }
 
-func printPacket(fromID NodeID, packet packet) {
-	fmt.Println("[%v] ==> %v", fromID, packet.name())
+func printPacket(prefix string, fromID NodeID, packet packet) {
+	fmt.Printf("%v %v <= 0x%x... \n", prefix, packet.name(), fromID[:8])
 }
 
 func (t *udp) Stop() {
@@ -247,7 +246,7 @@ func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint {
 
 func (t *udp) write(toaddr *net.UDPAddr, what string, packet []byte) error {
 	_, err := t.conn.WriteToUDP(packet, toaddr)
-	fmt.Printf(">> %v , addr = %v, err = %v", what, toaddr, err)
+	fmt.Printf("[udp]: >> %v , addr = %v, err = %v \n", what, toaddr, err)
 	return err
 }
 
