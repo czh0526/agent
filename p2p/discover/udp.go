@@ -164,8 +164,8 @@ func (t *udp) readLoop() {
 }
 
 func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
-	fmt.Printf("udp -> handlePacket: handle packet: 0x%x. \n", buf)
-	return nil
+	fmt.Printf("[udp] -> handlePacket(): [%v] handle packet: 0x%x. \n",  from ,buf)
+	return nil	
 }
 
 func (t *udp) Stop() {
