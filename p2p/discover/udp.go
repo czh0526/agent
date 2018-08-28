@@ -17,8 +17,10 @@ import (
 const Version = 4
 
 var (
-	errClockWarp = errors.New("reply deadline too far in the future")
-	errClosed    = errors.New("socket closed")
+	errPacketTooSmall = errors.New("too small")
+	errBadHash        = errors.New("bad hash")
+	errClockWarp      = errors.New("reply deadline too far in the future")
+	errClosed         = errors.New("socket closed")
 )
 
 const (
@@ -164,8 +166,19 @@ func (t *udp) readLoop() {
 }
 
 func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
-	fmt.Printf("[udp] -> handlePacket(): [%v] handle packet: 0x%x. \n",  from ,buf)
-	return nil	
+	packet, fromID, hash, err := decodePacket(buf)
+	if err != nil {
+		return err
+	}
+
+	printPacket(fromID, packet)
+
+	err = packet.handle(t, from, fromID, hash)
+	return err
+}
+
+func printPacket(fromID NodeID, packet packet) {
+	fmt.Println("[%v] ==> %v", fromID, packet.name())
 }
 
 func (t *udp) Stop() {
@@ -259,6 +272,51 @@ func encodePacket(priv *ecdsa.PrivateKey, ptype byte, req interface{}) (packet, 
 	hash = crypto.Keccak256(packet[macSize:])
 	copy(packet, hash)
 	return packet, hash, nil
+}
+
+func decodePacket(buf []byte) (packet, NodeID, []byte, error) {
+	if len(buf) < headSize+1 {
+		return nil, NodeID{}, nil, errPacketTooSmall
+	}
+	// 外层 hash , 签名， 数据
+	hash, sig, sigdata := buf[:macSize], buf[macSize:headSize], buf[headSize:]
+	// 校验外层 hash
+	shouldhash := crypto.Keccak256(buf[macSize:])
+	if !bytes.Equal(hash, shouldhash) {
+		return nil, NodeID{}, nil, errBadHash
+	}
+	// 签名 + 数据 => 公钥
+	fromID, err := recoverNodeID(crypto.Keccak256(buf[headSize:]), sig)
+	if err != nil {
+		return nil, NodeID{}, hash, err
+	}
+	var req packet
+	switch ptype := sigdata[0]; ptype {
+	case pingPacket:
+		req = new(ping)
+	case pongPacket:
+		req = new(pong)
+	default:
+		return nil, fromID, hash, fmt.Errorf("unknown type: %d", ptype)
+	}
+
+	s := rlp.NewStream(bytes.NewReader(sigdata[1:]), 0)
+	err = s.Decode(req)
+	return req, fromID, hash, err
+}
+
+func recoverNodeID(hash, sig []byte) (id NodeID, err error) {
+	pubkey, err := crypto.Ecrecover(hash, sig)
+	if err != nil {
+		return id, err
+	}
+	if len(pubkey)-1 != len(id) {
+		return id, fmt.Errorf("recovered pubkey has %d bits, want %d bits", len(pubkey)*8, (len(id)+1)*8)
+	}
+	for i := range id {
+		id[i] = pubkey[i+1]
+	}
+	return id, nil
 }
 
 const (

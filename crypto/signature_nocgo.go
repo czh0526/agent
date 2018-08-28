@@ -29,3 +29,21 @@ func Sign(hash []byte, prv *ecdsa.PrivateKey) ([]byte, error) {
 	sig[64] = v
 	return sig, nil
 }
+
+func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) {
+	btcsig := make([]byte, 65)
+	btcsig[0] = sig[64] + 27
+	copy(btcsig[1:], sig)
+
+	pub, _, err := btcec.RecoverCompact(btcec.S256(), btcsig, hash)
+	return (*ecdsa.PublicKey)(pub), err
+}
+
+func Ecrecover(hash, sig []byte) ([]byte, error) {
+	pub, err := SigToPub(hash, sig)
+	if err != nil {
+		return nil, err
+	}
+	bytes := (*btcec.PublicKey)(pub).SerializeUncompressed()
+	return bytes, err
+}
