@@ -31,17 +31,19 @@ func (self *Agent) Start() error {
 		return err
 	}
 
-	if err := self.RPCServer.Start(); err != nil {
-		fmt.Println("[RPCServer] -> Start() error: %v", err)
-		return err
-	}
+	/*
+		if err := self.RPCServer.Start(); err != nil {
+			fmt.Println("[RPCServer] -> Start() error: %v", err)
+			return err
+		}
+	*/
 
 	return nil
 }
 
 func (self *Agent) Stop() error {
 	go self.P2PServer.Stop()
-	go self.RPCServer.Stop()
+	//go self.RPCServer.Stop()
 	// 通知外部程序，agent终止
 	close(self.stop)
 	return nil

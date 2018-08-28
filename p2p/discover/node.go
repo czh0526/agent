@@ -12,6 +12,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/czh0526/agent/common"
+	"github.com/czh0526/agent/crypto"
 )
 
 const NodeIDBits = 512
@@ -27,6 +30,8 @@ type Node struct {
 	UDP, TCP uint16
 	ID       NodeID
 	addedAt  time.Time
+	// 计算适量距离使用
+	sha common.Hash
 }
 
 func NewNode(id NodeID, ip net.IP, udpPort, tcpPort uint16) *Node {
@@ -39,7 +44,12 @@ func NewNode(id NodeID, ip net.IP, udpPort, tcpPort uint16) *Node {
 		UDP: udpPort,
 		TCP: tcpPort,
 		ID:  id,
+		sha: crypto.Keccak256Hash(id[:]),
 	}
+}
+
+func (n *Node) addr() *net.UDPAddr {
+	return &net.UDPAddr{IP: n.IP, Port: int(n.UDP)}
 }
 
 var incompleteNodeURL = regexp.MustCompile("(?i)^(?:enode://)?([0-9a-f]+)$")
@@ -130,4 +140,73 @@ func PubkeyID(pub *ecdsa.PublicKey) NodeID {
 	}
 	copy(id[:], pbytes[1:])
 	return id
+}
+
+/*
+ 1: 	a -> target > b -> target
+ -1: 	a -> tatget < b -> target
+ 0:		a -> target = b -> target
+*/
+func distcmp(target, a, b common.Hash) int {
+	for i := range target {
+		da := a[i] ^ target[i]
+		db := b[i] ^ target[i]
+		if da > db {
+			return 1
+		} else if da < db {
+			return -1
+		}
+	}
+
+	return 0
+}
+
+// table of leading zero counts for bytes [0..255]
+var lzcount = [256]int{
+	8, 7, 6, 6, 5, 5, 5, 5,
+	4, 4, 4, 4, 4, 4, 4, 4,
+	3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3,
+	2, 2, 2, 2, 2, 2, 2, 2,
+	2, 2, 2, 2, 2, 2, 2, 2,
+	2, 2, 2, 2, 2, 2, 2, 2,
+	2, 2, 2, 2, 2, 2, 2, 2,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+}
+
+func logdist(a, b common.Hash) int {
+	lz := 0
+	for i := range a {
+		x := a[i] ^ b[i]
+		if x == 0 {
+			lz += 8
+		} else {
+			lz += lzcount[x]
+			break
+		}
+	}
+	return len(a)*8 - lz
 }

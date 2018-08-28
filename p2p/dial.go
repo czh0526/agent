@@ -134,6 +134,7 @@ type dialTask struct {
 }
 
 func (t *dialTask) Do(srv Server) {
+	<-time.After(time.Millisecond * 500)
 	err := t.dial(srv, t.dest)
 	if err != nil {
 		fmt.Printf("dialTask error: %v \n", err)
@@ -157,6 +158,7 @@ type discoverTask struct {
 }
 
 func (t *discoverTask) Do(srv Server) {
+	<-time.After(time.Millisecond * 500)
 	var target discover.NodeID
 	rand.Read(target[:])
 	t.results = srv.Lookup(target)
@@ -183,9 +185,9 @@ func (t waitExpireTask) String() string {
 }
 
 func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now time.Time) []task {
-	if s.start.IsZero() {
-		s.start = now
-	}
+	//	if s.start.IsZero() {
+	//		s.start = now
+	//	}
 
 	var newtasks []task
 	addDial := func(flag connFlag, n *discover.Node) bool {
@@ -197,19 +199,28 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 		return true
 	}
 
+	/*
+		计算需要构建的 Task 数量
+	*/
 	needDynDials := s.maxDynDials
+
+	// 减去已经建立连接的
 	for _, p := range peers {
 		if p.rw.is(dynDialedConn) {
 			needDynDials--
 		}
 	}
 
+	// 减去正在建立连接的
 	for _, flag := range s.dialing {
 		if flag&dynDialedConn != 0 {
 			needDynDials--
 		}
 	}
 
+	/*
+		构建 dialTask
+	*/
 	s.hist.expire(now)
 
 	// bootnode: dialTask ==> newtasks
@@ -223,6 +234,7 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 			needDynDials--
 		}
 	}
+	fmt.Printf("[dialstate] -> newTasks(): 需要构建 %v 个拨号任务. \n", needDynDials)
 
 	// randomNodes: dialTask ==> newtasks
 	randomCandidates := needDynDials / 2
@@ -230,11 +242,13 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 		// 填充 s.randomNodes 中的条目
 		n := s.ntab.ReadRandomNodes(s.randomNodes)
 		// 为选中中随机节点添加 Task
-		for i := 0; i < randomCandidates && i < n; i++ {
+		i := 0
+		for ; i < randomCandidates && i < n; i++ {
 			if addDial(dynDialedConn, s.randomNodes[i]) {
 				needDynDials--
 			}
 		}
+		fmt.Printf("[dialstate] -> newTasks(): 从 discoverTable 中构建了 %v 个任务. \n", i)
 	}
 
 	// lookupBuf: dialTask ==> newtasks
@@ -244,6 +258,7 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 			needDynDials--
 		}
 	}
+	fmt.Printf("[dialstate] -> newTasks(): 从 lookupBuf 中构建了 %v 个任务. \n", i)
 
 	// discoverTask ==> newtasks
 	s.lookupBuf = s.lookupBuf[:copy(s.lookupBuf, s.lookupBuf[i:])]
@@ -251,13 +266,14 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 		s.lookupRunning = true
 		newtasks = append(newtasks, &discoverTask{})
 	}
+	fmt.Printf("[dialstate] -> newTasks(): 没有足够的 dialTask，构建一个 discoverTask. \n")
 
 	// waitExpireTask ==> newtasks
 	if nRunning == 0 && len(newtasks) == 0 {
 		t := &waitExpireTask{s.hist.min().exp.Sub(now)}
 		newtasks = append(newtasks, t)
 	}
-
+	fmt.Println()
 	return newtasks
 }
 

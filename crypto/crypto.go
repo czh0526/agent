@@ -8,6 +8,10 @@ import (
 	"io"
 	"math/big"
 	"os"
+
+	"github.com/czh0526/agent/crypto/sha3"
+
+	"github.com/czh0526/agent/common"
 )
 
 var (
@@ -51,4 +55,23 @@ func ToECDSA(d []byte) (*ecdsa.PrivateKey, error) {
 		return nil, errors.New("invalid private key")
 	}
 	return priv, nil
+}
+
+// 返回值是 256 位的 byte(32个)
+func Keccak256(data ...[]byte) []byte {
+	d := sha3.NewKeccak256()
+	for _, b := range data {
+		d.Write(b)
+	}
+	return d.Sum(nil)
+}
+
+// 返回值是 256 位的 Hash
+func Keccak256Hash(data ...[]byte) (h common.Hash) {
+	d := sha3.NewKeccak256()
+	for _, b := range data {
+		d.Write(b)
+	}
+	d.Sum(h[:0])
+	return h
 }

@@ -70,6 +70,7 @@ func (self *P2PServer) Start() error {
 		discover.MustParseNode("enode://0f231b57ffe1a1b69dcd5e6fbed3ea4bc2e903eae6e6295aca2abf92e264652945219403ecdb99a8523c485e6dfd05f1124d332feb89397820843ee7ed2b3a1f@139.199.100.150:65353"),
 	}
 
+	// 加载私钥
 	nodeKeyPath, err := filepath.Abs("./nodekey")
 	if err != nil {
 		return err
@@ -80,6 +81,7 @@ func (self *P2PServer) Start() error {
 	}
 	fmt.Printf("self NodeID = %v \n", discover.PubkeyID(&privateKey.PublicKey).String())
 
+	// 构建拨号器
 	if self.dialer == nil {
 		self.dialer = TCPDialer{&net.Dialer{Timeout: defaultDialTimeout}}
 	}
@@ -90,7 +92,7 @@ func (self *P2PServer) Start() error {
 		Bootnodes:    bootnodes,
 	}
 
-	// 启动 udp 监听/通讯例程
+	// 构建 discoveryTable(网络节点缓存)
 	tab, err := discover.ListenUDP(conn, cfg)
 	self.ntab = tab
 
@@ -155,7 +157,7 @@ running:
 			fmt.Printf("[P2PServer] -> listenLoop(): error occur —— %v \n", err)
 			break running
 		}
-		fmt.Printf("[P2PServer] => listenLoop(): get a conn from %v", fd.LocalAddr())
+		fmt.Printf("[P2PServer] => listenLoop(): get a conn from %v \n", fd.LocalAddr())
 
 		go func() {
 			self.SetupConn(fd, inboundConn, nil)
