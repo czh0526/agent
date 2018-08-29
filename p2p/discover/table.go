@@ -343,6 +343,7 @@ func (tab *Table) isInitDone() bool {
 }
 
 func (tab *Table) bondall(nodes []*Node) (result []*Node) {
+	fmt.Println("bondall()")
 	// 通讯管道
 	rc := make(chan *Node, len(nodes))
 	// 启动 bond 流程
