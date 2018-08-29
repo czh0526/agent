@@ -19,6 +19,7 @@ const Version = 4
 var (
 	errPacketTooSmall = errors.New("too small")
 	errBadHash        = errors.New("bad hash")
+	errExpired        = errors.New("expired")
 	errClockWarp      = errors.New("reply deadline too far in the future")
 	errClosed         = errors.New("socket closed")
 )
@@ -244,6 +245,16 @@ func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint {
 	return rpcEndpoint{IP: ip, UDP: uint16(addr.Port), TCP: tcpPort}
 }
 
+// 编码 + 发送 作为一个整体逻辑，不期待数据响应。
+func (t *udp) send(toaddr *net.UDPAddr, ptype byte, req packet) ([]byte, error) {
+	packet, hash, err := encodePacket(t.priv, ptype, req)
+	if err != nil {
+		return hash, err
+	}
+	return hash, t.write(toaddr, req.name(), packet)
+}
+
+// 单纯的发送数据包逻辑
 func (t *udp) write(toaddr *net.UDPAddr, what string, packet []byte) error {
 	_, err := t.conn.WriteToUDP(packet, toaddr)
 	fmt.Printf("[udp]: >> %v , addr = %v, err = %v \n", what, toaddr, err)
@@ -318,6 +329,10 @@ func recoverNodeID(hash, sig []byte) (id NodeID, err error) {
 	return id, nil
 }
 
+func expired(ts uint64) bool {
+	return time.Unix(int64(ts), 0).Before(time.Now())
+}
+
 const (
 	pingPacket = iota + 1
 	pongPacket
@@ -354,6 +369,14 @@ type (
 
 func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
 	fmt.Println("[udp] -> handle(): handle ping message...")
+	if expired(req.Expiration) {
+		return errExpired
+	}
+	t.send(from, pongPacket, &pong{
+		To:         makeEndpoint(from, req.From.TCP),
+		ReplyTok:   mac,
+		Expiration: uint64(time.Now().Add(expiration).Unix()),
+	})
 	return nil
 }
 func (req *ping) name() string { return "PING/v4" }
