@@ -366,10 +366,11 @@ func (tab *Table) bondall(nodes []*Node) (result []*Node) {
 	pinged: 是否是被 ping 消息触发
 */
 func (tab *Table) bond(pinged bool, id NodeID, addr *net.UDPAddr, tcpPort uint16) (*Node, error) {
-	fmt.Printf("bond(pinged=%v) was called. \n", pinged)
 	if id == tab.self.ID {
 		return nil, nil
 	}
+
+	fmt.Printf("bond(pinged=%v) was called. \n", pinged)
 	if pinged && !tab.isInitDone() {
 		return nil, errors.New("still initializing")
 	}
