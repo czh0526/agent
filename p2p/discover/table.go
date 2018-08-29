@@ -343,12 +343,12 @@ func (tab *Table) isInitDone() bool {
 }
 
 func (tab *Table) bondall(nodes []*Node) (result []*Node) {
-	fmt.Println("bondall()")
 	// 通讯管道
 	rc := make(chan *Node, len(nodes))
 	// 启动 bond 流程
 	for i := range nodes {
 		go func(n *Node) {
+			fmt.Println("initial ping message...")
 			nn, _ := tab.bond(false, n.ID, n.addr(), n.TCP)
 			// 序列化返回值
 			rc <- nn

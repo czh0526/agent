@@ -445,7 +445,7 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	})
 	if !t.handleReply(fromID, pingPacket, req) {
-		fmt.Println("ping.handle()")
+		fmt.Println("response ping message ...")
 		go t.bond(true, fromID, from, req.From.TCP)
 	}
 
