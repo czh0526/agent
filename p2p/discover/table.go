@@ -348,7 +348,6 @@ func (tab *Table) bondall(nodes []*Node) (result []*Node) {
 	// 启动 bond 流程
 	for i := range nodes {
 		go func(n *Node) {
-			fmt.Println("initial ping message...")
 			nn, _ := tab.bond(false, n.ID, n.addr(), n.TCP)
 			// 序列化返回值
 			rc <- nn
@@ -370,7 +369,11 @@ func (tab *Table) bond(pinged bool, id NodeID, addr *net.UDPAddr, tcpPort uint16
 		return nil, nil
 	}
 
-	fmt.Printf("bond(pinged=%v) was called. \n", pinged)
+	if pinged {
+		fmt.Println("response ping message ...")
+	} else {
+		fmt.Println("initial ping message ... ")
+	}
 	if pinged && !tab.isInitDone() {
 		return nil, errors.New("still initializing")
 	}
