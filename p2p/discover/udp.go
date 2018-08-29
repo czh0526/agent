@@ -20,6 +20,7 @@ var (
 	errPacketTooSmall = errors.New("too small")
 	errBadHash        = errors.New("bad hash")
 	errExpired        = errors.New("expired")
+	errTimeout        = errors.New("RPC timeout")
 	errClockWarp      = errors.New("reply deadline too far in the future")
 	errClosed         = errors.New("socket closed")
 )
@@ -27,6 +28,10 @@ var (
 const (
 	respTimeout = 500 * time.Millisecond
 	expiration  = 20 * time.Second
+
+	ntpFailureThreshold = 32
+	ntpWarningCooldown  = 10 * time.Minute
+	driftThreshold      = 10 * time.Second
 )
 
 type Config struct {
@@ -54,12 +59,20 @@ type pending struct {
 	errc     chan<- error
 }
 
+type reply struct {
+	from    NodeID
+	ptype   byte
+	data    interface{}
+	matched chan<- bool
+}
+
 type udp struct {
 	conn        *net.UDPConn
 	priv        *ecdsa.PrivateKey
 	ourEndpoint rpcEndpoint
 
 	addpending chan *pending
+	gotreply   chan reply
 
 	closing chan struct{}
 
@@ -80,6 +93,7 @@ func newUDP(c *net.UDPConn, cfg Config) (*Table, *udp, error) {
 		conn:       c,
 		priv:       cfg.PrivateKey,
 		closing:    make(chan struct{}),
+		gotreply:   make(chan reply),
 		addpending: make(chan *pending),
 	}
 
@@ -103,9 +117,11 @@ func newUDP(c *net.UDPConn, cfg Config) (*Table, *udp, error) {
 
 func (t *udp) loop() {
 	var (
-		plist       = list.New()
-		timeout     = time.NewTimer(0)
-		nextTimeout *pending
+		plist        = list.New()
+		timeout      = time.NewTimer(0)
+		nextTimeout  *pending
+		contTimeouts = 0
+		ntpWarnTime  = time.Now()
 	)
 	<-timeout.C
 	defer timeout.Stop()
@@ -119,12 +135,15 @@ func (t *udp) loop() {
 		for el := plist.Front(); el != nil; el = el.Next() {
 			nextTimeout = el.Value.(*pending)
 			if dist := nextTimeout.deadline.Sub(now); dist < 2*respTimeout {
+				// 设置下一次的超时时间间隔
 				timeout.Reset(dist)
 				return
 			}
+			// 对于超时时间异常的，返回错误并删除
 			nextTimeout.errc <- errClockWarp
 			plist.Remove(el)
 		}
+		// plist 列表为空，停止定时器
 		nextTimeout = nil
 		timeout.Stop()
 	}
@@ -140,8 +159,44 @@ func (t *udp) loop() {
 			}
 			return
 		case p := <-t.addpending:
+			fmt.Println("插入一个 pending 对象")
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
+
+		case r := <-t.gotreply:
+			var matched bool
+			for el := plist.Front(); el != nil; el = el.Next() {
+				p := el.Value.(*pending)
+				if p.from == r.from && p.ptype == r.ptype {
+					matched = true
+					if p.callback(r.data) {
+						p.errc <- nil
+						plist.Remove(el)
+					}
+					contTimeouts = 0
+				}
+			}
+			r.matched <- matched
+
+		case now := <-timeout.C:
+			nextTimeout = nil
+			// 删除过期的 pending 对象
+			for el := plist.Front(); el != nil; el = el.Next() {
+				p := el.Value.(*pending)
+				if now.After(p.deadline) || now.Equal(p.deadline) {
+					p.errc <- errTimeout
+					plist.Remove(el)
+					contTimeouts++
+				}
+			}
+
+			if contTimeouts > ntpFailureThreshold {
+				if time.Since(ntpWarnTime) >= ntpWarningCooldown {
+					ntpWarnTime = time.Now()
+					go checkClockDrift()
+				}
+				contTimeouts = 0
+			}
 		}
 	}
 
@@ -204,6 +259,17 @@ func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-
 	return ch
 }
 
+func (t *udp) handleReply(from NodeID, ptype byte, req packet) bool {
+	matched := make(chan bool, 1)
+	// 将 reply 对象纳入管理
+	select {
+	case t.gotreply <- reply{from, ptype, req, matched}:
+		return <-matched
+	case <-t.closing:
+		return false
+	}
+}
+
 func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
 	// 构建 ping 消息
 	req := &ping{
@@ -217,6 +283,7 @@ func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
 	if err != nil {
 		return err
 	}
+	// 期待有消息响应
 	errc := t.pending(toid, pongPacket, func(p interface{}) bool {
 		return bytes.Equal(p.(*pong).ReplyTok, hash)
 	})
@@ -377,6 +444,10 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 		ReplyTok:   mac,
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	})
+	if !t.handleReply(fromID, pingPacket, req) {
+		go t.bond(true, fromID, from, req.From.TCP)
+	}
+
 	return nil
 }
 func (req *ping) name() string { return "PING/v4" }

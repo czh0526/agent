@@ -365,6 +365,7 @@ func (tab *Table) bondall(nodes []*Node) (result []*Node) {
 	pinged: 是否是被 ping 消息触发
 */
 func (tab *Table) bond(pinged bool, id NodeID, addr *net.UDPAddr, tcpPort uint16) (*Node, error) {
+	fmt.Println("bond() was called.")
 	if id == tab.self.ID {
 		return nil, nil
 	}
