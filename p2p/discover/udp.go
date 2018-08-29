@@ -193,7 +193,7 @@ func (t *udp) loop() {
 			if contTimeouts > ntpFailureThreshold {
 				if time.Since(ntpWarnTime) >= ntpWarningCooldown {
 					ntpWarnTime = time.Now()
-					go checkClockDrift()
+					//go checkClockDrift()
 				}
 				contTimeouts = 0
 			}
@@ -283,7 +283,7 @@ func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
 	if err != nil {
 		return err
 	}
-	// 期待有消息响应
+	// 期待有 pong 消息响应
 	errc := t.pending(toid, pongPacket, func(p interface{}) bool {
 		return bytes.Equal(p.(*pong).ReplyTok, hash)
 	})
