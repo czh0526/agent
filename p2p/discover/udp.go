@@ -149,7 +149,6 @@ func (t *udp) loop() {
 	}
 
 	for {
-		fmt.Println("[udp] -> loop(): ")
 		resetTimeout()
 
 		select {
@@ -159,11 +158,12 @@ func (t *udp) loop() {
 			}
 			return
 		case p := <-t.addpending:
-			fmt.Printf("插入一个 pending %v 对象 \n", getTypeString(p))
+			fmt.Printf("插入一个 pending %v 对象 \n", getTypeString(p.ptype))
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
 
 		case r := <-t.gotreply:
+			fmt.Printf("处理一个 reply %v 对象 \n", getTypeString(r.ptype))
 			var matched bool
 			for el := plist.Front(); el != nil; el = el.Next() {
 				p := el.Value.(*pending)
@@ -202,8 +202,8 @@ func (t *udp) loop() {
 
 }
 
-func getTypeString(p *pending) string {
-	switch p.ptype {
+func getTypeString(ptype byte) string {
+	switch ptype {
 	case pingPacket:
 		return "ping"
 	case pongPacket:
@@ -279,6 +279,7 @@ func (t *udp) handleReply(from NodeID, ptype byte, req packet) bool {
 	// 将 reply 对象纳入管理
 	select {
 	case t.gotreply <- reply{from, ptype, req, matched}:
+		fmt.Printf("插入一个 reply %v 对象. \n", getTypeString(ptype))
 		return <-matched
 	case <-t.closing:
 		return false
@@ -450,7 +451,7 @@ type (
 )
 
 func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
-	fmt.Println("[udp] -> handle(): handle ping message...")
+	fmt.Printf("[udp] -> ping.handle(): ping <== %v \n", from)
 	if expired(req.Expiration) {
 		return errExpired
 	}
@@ -468,7 +469,7 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 func (req *ping) name() string { return "PING/v4" }
 
 func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
-	fmt.Println("[udp] -> handle(): handle pong message...")
+	fmt.Printf("[udp] -> pong.handle(): pong <== %v \n", from)
 	return nil
 }
 func (req *pong) name() string { return "PONG/v4" }
