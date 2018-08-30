@@ -159,7 +159,7 @@ func (t *udp) loop() {
 			}
 			return
 		case p := <-t.addpending:
-			fmt.Println("插入一个 pending 对象")
+			fmt.Printf("插入一个 pending %v 对象 \n", getTypeString(p))
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
 
@@ -200,6 +200,21 @@ func (t *udp) loop() {
 		}
 	}
 
+}
+
+func getTypeString(p *pending) string {
+	switch p.ptype {
+	case pingPacket:
+		return "ping"
+	case pongPacket:
+		return "pong"
+	case findnodePacket:
+		return "findnode"
+	case neighborsPacket:
+		return "neighbors"
+	default:
+		return "unknown"
+	}
 }
 
 func (t *udp) readLoop() {
