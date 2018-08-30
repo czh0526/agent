@@ -17,12 +17,13 @@ import (
 const Version = 4
 
 var (
-	errPacketTooSmall = errors.New("too small")
-	errBadHash        = errors.New("bad hash")
-	errExpired        = errors.New("expired")
-	errTimeout        = errors.New("RPC timeout")
-	errClockWarp      = errors.New("reply deadline too far in the future")
-	errClosed         = errors.New("socket closed")
+	errPacketTooSmall   = errors.New("too small")
+	errBadHash          = errors.New("bad hash")
+	errExpired          = errors.New("expired")
+	errUnsolicitedReply = errors.New("unsolicited reply")
+	errTimeout          = errors.New("RPC timeout")
+	errClockWarp        = errors.New("reply deadline too far in the future")
+	errClosed           = errors.New("socket closed")
 )
 
 const (
@@ -314,9 +315,7 @@ func (t *udp) ping(toid NodeID, toaddr *net.UDPAddr) error {
 }
 
 func (t *udp) waitping(from NodeID) error {
-	fmt.Println("[udp]: waitping")
-	<-time.After(time.Second * 3)
-	return nil
+	return <-t.pending(from, pingPacket, func(interface{}) bool { return true })
 }
 
 func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) {
@@ -476,6 +475,12 @@ func (req *ping) name() string { return "PING/v4" }
 
 func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
 	fmt.Printf("[udp] -> pong.handle(): pong <== %v \n", from)
+	if expired(req.Expiration) {
+		return errExpired
+	}
+	if !t.handleReply(fromID, pongPacket, req) {
+		return errUnsolicitedReply
+	}
 	return nil
 }
 func (req *pong) name() string { return "PONG/v4" }
