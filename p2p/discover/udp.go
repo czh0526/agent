@@ -159,12 +159,12 @@ func (t *udp) loop() {
 			}
 			return
 		case p := <-t.addpending:
-			fmt.Printf("插入一个 pending %v 对象 \n", getTypeString(p.ptype))
+			fmt.Printf("addpending ==> %v \n", getTypeString(p.ptype))
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
 
 		case r := <-t.gotreply:
-			fmt.Printf("处理一个 reply %v 对象 \n", getTypeString(r.ptype))
+			fmt.Printf("gotreply ==> %v \n", getTypeString(r.ptype))
 			var matched bool
 			for el := plist.Front(); el != nil; el = el.Next() {
 				p := el.Value.(*pending)
@@ -269,6 +269,7 @@ func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-
 	// 将 pending 对象纳入管理
 	select {
 	case t.addpending <- p:
+		fmt.Printf("addpending <== %v \n", getTypeString(p.ptype))
 	case <-t.closing:
 		ch <- errClosed
 	}
@@ -285,7 +286,7 @@ func (t *udp) handleReply(from NodeID, ptype byte, req packet) bool {
 	// 将 reply 对象纳入管理
 	select {
 	case t.gotreply <- reply{from, ptype, req, matched}:
-		fmt.Printf("插入一个 reply %v 对象. \n", getTypeString(ptype))
+		fmt.Printf("gotreply <== %v  \n", getTypeString(ptype))
 		// 等待 reply 消息在 loop 循环中被处理
 		return <-matched
 	case <-t.closing:
