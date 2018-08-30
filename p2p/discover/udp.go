@@ -159,12 +159,12 @@ func (t *udp) loop() {
 			}
 			return
 		case p := <-t.addpending:
-			fmt.Printf("addpending ==> %v \n", getTypeString(p.ptype))
+			fmt.Printf("addpending ==> %v ==> plist \n", getTypeString(p.ptype))
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
 
 		case r := <-t.gotreply:
-			fmt.Printf("gotreply ==> %v \n", getTypeString(r.ptype))
+			fmt.Printf("gotreply ==> %v, ", getTypeString(r.ptype))
 			var matched bool
 			for el := plist.Front(); el != nil; el = el.Next() {
 				p := el.Value.(*pending)
@@ -173,11 +173,12 @@ func (t *udp) loop() {
 					if p.callback(r.data) {
 						p.errc <- nil
 						plist.Remove(el)
+						fmt.Printf("plist =\\=> %v \n", getTypeString(p.ptype))
 					}
 					contTimeouts = 0
 				}
 			}
-			fmt.Printf("reply match = %v \n", matched)
+
 			r.matched <- matched
 
 		case now := <-timeout.C:
