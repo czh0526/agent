@@ -176,6 +176,7 @@ func (t *udp) loop() {
 					contTimeouts = 0
 				}
 			}
+			fmt.Printf("reply match = %v \n", matched)
 			r.matched <- matched
 
 		case now := <-timeout.C:
@@ -274,12 +275,17 @@ func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-
 	return ch
 }
 
+/*
+	我们收到的 req 需要我们发出一个消息响应，
+	我们通过 gotreply chan 做响应消息的管理
+*/
 func (t *udp) handleReply(from NodeID, ptype byte, req packet) bool {
 	matched := make(chan bool, 1)
 	// 将 reply 对象纳入管理
 	select {
 	case t.gotreply <- reply{from, ptype, req, matched}:
 		fmt.Printf("插入一个 reply %v 对象. \n", getTypeString(ptype))
+		// 等待 reply 消息在 loop 循环中被处理
 		return <-matched
 	case <-t.closing:
 		return false
