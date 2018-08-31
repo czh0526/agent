@@ -81,6 +81,11 @@ func (self *P2PServer) Start() error {
 	}
 	fmt.Printf("self NodeID = %v \n", discover.PubkeyID(&privateKey.PublicKey).String())
 
+	nodeDBPath, err := filepath.Abs("./nodes")
+	if err != nil {
+		return err
+	}
+
 	// 构建拨号器
 	if self.dialer == nil {
 		self.dialer = TCPDialer{&net.Dialer{Timeout: defaultDialTimeout}}
@@ -89,6 +94,7 @@ func (self *P2PServer) Start() error {
 	cfg := discover.Config{
 		PrivateKey:   privateKey,
 		AnnounceAddr: realaddr,
+		NodeDBPath:   nodeDBPath,
 		Bootnodes:    bootnodes,
 	}
 
@@ -242,6 +248,7 @@ func (self *P2PServer) run(dialstate dialer) {
 
 running:
 	for {
+		fmt.Printf("[P2PServer]: peer number = %v \n", len(peers))
 		scheduleTasks()
 
 		// 监听外部退出事件

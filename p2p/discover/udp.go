@@ -104,7 +104,7 @@ func newUDP(c *net.UDPConn, cfg Config) (*Table, *udp, error) {
 	}
 
 	udp.ourEndpoint = makeEndpoint(realaddr, uint16(realaddr.Port))
-	tab, err := newTable(udp, PubkeyID(&cfg.PrivateKey.PublicKey), realaddr, cfg.Bootnodes)
+	tab, err := newTable(udp, PubkeyID(&cfg.PrivateKey.PublicKey), realaddr, cfg.NodeDBPath, cfg.Bootnodes)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -258,11 +258,6 @@ func (t *udp) Stop() {
 	t.closing <- struct{}{}
 }
 
-func (t *udp) close() {
-	close(t.closing)
-	t.conn.Close()
-}
-
 func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-chan error {
 	// 构造 pending 对象
 	ch := make(chan error, 1)
@@ -325,6 +320,11 @@ func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node
 	nodes := make([]*Node, 0, bucketSize)
 	<-time.After(time.Second * 3)
 	return nodes, nil
+}
+
+func (t *udp) close() {
+	close(t.closing)
+	t.conn.Close()
 }
 
 func makeEndpoint(addr *net.UDPAddr, tcpPort uint16) rpcEndpoint {

@@ -6,3 +6,4 @@
 *.test
 debug
 cmd/nodekey
+cmd/nodes

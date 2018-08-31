@@ -14,11 +14,14 @@ import (
 )
 
 const (
+	maxReplacements = 10
+
 	bucketSize        = 16
 	hashBits          = len(common.Hash{}) * 8
 	nBuckets          = hashBits / 15
 	bucketMinDistance = hashBits - nBuckets
-	maxReplacements   = 10
+
+	maxFindnodeFailures = 5
 )
 
 type nodesByDistance struct {
@@ -128,6 +131,7 @@ type Table struct {
 	nursery []*Node
 	rand    *mrand.Rand
 
+	db         *nodeDB
 	refreshReq chan chan struct{}
 	initDone   chan struct{}
 	closeReq   chan struct{}
@@ -141,9 +145,14 @@ type Table struct {
 	self *Node
 }
 
-func newTable(t transport, ourID NodeID, ourAddr *net.UDPAddr, bootnodes []*Node) (*Table, error) {
+func newTable(t transport, ourID NodeID, ourAddr *net.UDPAddr, nodeDBPath string, bootnodes []*Node) (*Table, error) {
+	db, err := newNodeDB(nodeDBPath, Version, ourID)
+	if err != nil {
+		return nil, err
+	}
 	tab := &Table{
 		net:        t,
+		db:         db,
 		self:       NewNode(ourID, ourAddr.IP, uint16(ourAddr.Port), uint16(ourAddr.Port)),
 		bonding:    make(map[NodeID]*bondproc),
 		bondslots:  make(chan struct{}, 16),
@@ -194,32 +203,69 @@ func (tab *Table) Lookup(targetID NodeID) []*Node {
 	return tab.lookup(targetID, true)
 }
 
+// 查找邻居节点的核心算法
 func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 	var (
-		target = crypto.Keccak256Hash(targetID[:])
-		asked  = make(map[NodeID]bool)
-		//seen           = make(map[NodeID]bool)
-		//reply          = make(chan []*Node, 3)
-		//pendingQueries = 0
-		result *nodesByDistance
+		target         = crypto.Keccak256Hash(targetID[:])
+		asked          = make(map[NodeID]bool)
+		seen           = make(map[NodeID]bool)
+		reply          = make(chan []*Node, 3)
+		pendingQueries = 0
+		result         *nodesByDistance
 	)
 
 	asked[tab.self.ID] = true
 
 	for {
 		tab.mutex.Lock()
+		// 获取矢量距离最近的节点
 		result = tab.closest(target, bucketSize)
 		tab.mutex.Unlock()
 		if len(result.entries) > 0 || !refreshIfEmpty {
 			break
 		}
 
-		// 没有得到想要的结果，刷新节点缓存
+		// 没有取到结果，刷新节点缓存
 		<-tab.refresh()
 		refreshIfEmpty = false
 	}
 
-	return nil
+	for {
+		// 针对每个 Node 执行 findnode() 操作
+		for i := 0; i < len(result.entries) && pendingQueries < 3; i++ {
+			n := result.entries[i]
+			if !asked[n.ID] {
+				asked[n.ID] = true
+				pendingQueries++
+				go func() {
+					r, err := tab.net.findnode(n.ID, n.addr(), targetID)
+					if err != nil {
+						fails := tab.db.findFails(n.ID) + 1
+						tab.db.updateFindFails(n.ID, fails)
+
+						if fails >= maxFindnodeFailures {
+							tab.delete(n)
+						}
+					}
+					reply <- tab.bondall(r)
+				}()
+			}
+		}
+
+		if pendingQueries == 0 {
+			break
+		}
+
+		for _, n := range <-reply {
+			if n != nil && !seen[n.ID] {
+				seen[n.ID] = true
+				result.push(n, bucketSize)
+			}
+		}
+		pendingQueries--
+	}
+
+	return result.entries
 }
 
 func (t *Table) ReadRandomNodes([]*Node) int {
@@ -239,12 +285,14 @@ func (tab *Table) closest(target common.Hash, nresults int) *nodesByDistance {
 }
 
 func (tab *Table) refresh() <-chan struct{} {
+	fmt.Println("[Table]: 请求刷新 K-bucket.")
 	done := make(chan struct{})
 	select {
 	case tab.refreshReq <- done:
 	case <-tab.closed:
 		close(done)
 	}
+	// 返回 chan 变量，用于后续获取执行结果
 	return done
 }
 
@@ -272,29 +320,48 @@ loop:
 		case req := <-tab.refreshReq:
 			// 将请求排队
 			waiting = append(waiting, req)
-			// 如果当前没有 doRefresh() 在执行，启动它，并设置结束信号灯
+			// 当前没有 doRefresh() 在执行
 			if refreshDone == nil {
+				// 为新一轮的 doRefresh() 执行重新生成信号灯变量
 				refreshDone = make(chan struct{})
+				// 启动 doRefresh()
 				go tab.doRefresh(refreshDone)
 			}
 		case <-refreshDone: // 检测 doRefresh() 结束
-			// 消除排队的请求
+			// 批量设置排队请求的 chan 变量
 			for _, ch := range waiting {
 				close(ch)
 			}
-			// 清空队列，关闭信号灯
+			// 清空队列，结束信号灯变量
 			waiting, refreshDone = nil, nil
 		case <-tab.closeReq:
 			break loop
 		}
 	}
 
+	// 关闭 udp 端口
+	if tab.net != nil {
+		tab.net.close()
+	}
+
+	// 等待最后一次 doRefresh()
+	if refreshDone != nil {
+		<-refreshDone
+	}
+	for _, ch := range waiting {
+		close(ch)
+	}
+
+	// 关闭数据库
+	tab.db.close()
+	// 关闭 tab 对象
 	close(tab.closed)
 }
 
 func (tab *Table) doRefresh(done chan struct{}) {
 	defer close(done)
 
+	fmt.Println("[Table] -> doRefresh():")
 	tab.loadSeedNodes(true)
 	tab.lookup(tab.self.ID, false)
 }
@@ -325,6 +392,18 @@ func (tab *Table) add(new *Node) {
 	}
 }
 
+func (tab *Table) delete(node *Node) {
+	tab.mutex.Lock()
+	defer tab.mutex.Unlock()
+
+	tab.deleteInBucket(tab.bucket(node.sha), node)
+}
+
+func (tab *Table) deleteInBucket(b *bucket, n *Node) {
+	b.entries = deleteNode(b.entries, n)
+}
+
+// 根据 node.sha 定位 bucket
 func (tab *Table) bucket(sha common.Hash) *bucket {
 	d := logdist(tab.self.sha, sha)
 	if d <= bucketMinDistance {
