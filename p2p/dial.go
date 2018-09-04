@@ -34,6 +34,27 @@ const (
 	trustedConn
 )
 
+func (f connFlag) String() string {
+	s := ""
+	if f&trustedConn != 0 {
+		s += "-trusted"
+	}
+	if f&dynDialedConn != 0 {
+		s += "-dyndial"
+	}
+	if f&staticDialedConn != 0 {
+		s += "-staticdial"
+	}
+	if f&inboundConn != 0 {
+		s += "-inbound"
+	}
+
+	if s != "" {
+		s = s[1:]
+	}
+	return s
+}
+
 type NodeDialer interface {
 	Dial(*discover.Node) (net.Conn, error)
 }
@@ -208,6 +229,8 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 	for _, p := range peers {
 		if p.rw.is(dynDialedConn) {
 			needDynDials--
+		} else {
+			fmt.Printf("peer is a %v conn.", p.rw.flags)
 		}
 	}
 
