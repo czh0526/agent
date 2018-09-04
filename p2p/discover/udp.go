@@ -628,7 +628,9 @@ func (req *neighbors) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byt
 	if expired(req.Expiration) {
 		return errExpired
 	}
-	fmt.Println("neighbor packet to be handled...")
+	if !t.handleReply(fromID, neighborsPacket, req) {
+		return errUnsolicitedReply
+	}
 	return nil
 }
 
