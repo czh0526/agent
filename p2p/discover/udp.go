@@ -474,6 +474,10 @@ func decodePacket(buf []byte) (packet, NodeID, []byte, error) {
 		req = new(ping)
 	case pongPacket:
 		req = new(pong)
+	case findnodePacket:
+		req = new(findnode)
+	case neighborsPacket:
+		req = new(neighbors)
 	default:
 		return nil, fromID, hash, fmt.Errorf("unknown type: %d", ptype)
 	}
