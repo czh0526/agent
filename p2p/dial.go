@@ -230,7 +230,7 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 		if p.rw.is(dynDialedConn) {
 			needDynDials--
 		} else {
-			fmt.Printf("peer is a %v conn.", p.rw.flags)
+			fmt.Printf("peer is a %v conn.\n", p.rw.flags)
 		}
 	}
 

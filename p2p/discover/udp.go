@@ -55,6 +55,23 @@ var (
 	maxNeighbors int
 )
 
+func init() {
+	p := neighbors{Expiration: ^uint64(0)}
+	maxSizeNode := rpcNode{IP: make(net.IP, 16), UDP: ^uint16(0), TCP: ^uint16(0)}
+	for n := 0; ; n++ {
+		p.Nodes = append(p.Nodes, maxSizeNode)
+		size, _, err := rlp.EncodeToReader(p)
+		if err != nil {
+			// If this ever happens, it will be caught by the unit tests.
+			panic("cannot encode: " + err.Error())
+		}
+		if headSize+size+1 >= 1280 {
+			maxNeighbors = n
+			break
+		}
+	}
+}
+
 type pending struct {
 	from     NodeID
 	ptype    byte
