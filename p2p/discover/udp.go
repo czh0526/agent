@@ -21,6 +21,7 @@ var (
 	errBadHash          = errors.New("bad hash")
 	errExpired          = errors.New("expired")
 	errUnsolicitedReply = errors.New("unsolicited reply")
+	errUnknownNode      = errors.New("unknown node")
 	errTimeout          = errors.New("RPC timeout")
 	errClockWarp        = errors.New("reply deadline too far in the future")
 	errClosed           = errors.New("socket closed")
@@ -50,6 +51,8 @@ const (
 
 var (
 	headSpace = make([]byte, headSize)
+
+	maxNeighbors int
 )
 
 type pending struct {
@@ -316,10 +319,29 @@ func (t *udp) waitping(from NodeID) error {
 }
 
 func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node, error) {
-	fmt.Println("[udp]: findnode")
+	// 构造列表，接收用户数据
 	nodes := make([]*Node, 0, bucketSize)
-	<-time.After(time.Second * 3)
-	return nodes, nil
+	nreceived := 0
+	// 构造 pending 对象，注册处理函数
+	errc := t.pending(toid, neighborsPacket, func(r interface{}) bool {
+		reply := r.(*neighbors)
+		for _, rn := range reply.Nodes {
+			nreceived++
+			n, err := t.nodeFromRPC(toaddr, rn)
+			if err != nil {
+				fmt.Printf("Invalid neighbor node received, ip = %v, addr = %v, err = %v", rn.IP, toaddr, err)
+				continue
+			}
+			nodes = append(nodes, n)
+		}
+		return nreceived >= bucketSize
+	})
+	t.send(toaddr, findnodePacket, &findnode{
+		Target:     target,
+		Expiration: uint64(time.Now().Add(expiration).Unix()),
+	})
+	err := <-errc
+	return nodes, err
 }
 
 func (t *udp) close() {
@@ -348,6 +370,45 @@ func (t *udp) send(toaddr *net.UDPAddr, ptype byte, req packet) ([]byte, error) 
 func (t *udp) write(toaddr *net.UDPAddr, what string, packet []byte) error {
 	_, err := t.conn.WriteToUDP(packet, toaddr)
 	fmt.Printf("[udp]: >> %v , addr = %v, err = %v \n", what, toaddr, err)
+	return err
+}
+
+/*
+	rpcNode ==> Node
+*/
+func (t *udp) nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) {
+	if rn.UDP <= 1024 {
+		return nil, errors.New("low port")
+	}
+
+	n := NewNode(rn.ID, rn.IP, rn.UDP, rn.TCP)
+	err := n.validateComplete()
+	return n, err
+}
+
+/*
+	把节点转化成 TCP 连接用的节点
+	Node ==> rpcNode
+*/
+func nodeToRPC(n *Node) rpcNode {
+	return rpcNode{ID: n.ID, IP: n.IP, UDP: n.UDP, TCP: n.TCP}
+}
+
+func (n *Node) Incomplete() bool {
+	return n.IP == nil
+}
+
+func (n *Node) validateComplete() error {
+	if n.Incomplete() {
+		return errors.New("incomplete node")
+	}
+	if n.UDP == 0 {
+		return errors.New("missing UDP port")
+	}
+	if n.TCP == 0 {
+		return errors.New("missing TCP port")
+	}
+	_, err := n.ID.Pubkey()
 	return err
 }
 
@@ -450,6 +511,25 @@ type (
 		Rest       []rlp.RawValue `rlp:"tail"`
 	}
 
+	findnode struct {
+		Target     NodeID
+		Expiration uint64
+		Rest       []rlp.RawValue `rlp:"tail"`
+	}
+
+	neighbors struct {
+		Nodes      []rpcNode
+		Expiration uint64
+		Rest       []rlp.RawValue `rlp:"tail"`
+	}
+
+	rpcNode struct {
+		IP  net.IP
+		UDP uint16
+		TCP uint16
+		ID  NodeID
+	}
+
 	rpcEndpoint struct {
 		IP  net.IP
 		UDP uint16
@@ -486,3 +566,51 @@ func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 	return nil
 }
 func (req *pong) name() string { return "PONG/v4" }
+
+func (req *findnode) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
+	if expired(req.Expiration) {
+		return errExpired
+	}
+	if !t.db.hasBond(fromID) {
+		return errUnknownNode
+	}
+
+	// 计算目标节点的矢量值, 并找出几个最近的节点
+	target := crypto.Keccak256Hash(req.Target[:])
+	t.mutex.Lock()
+	closest := t.closest(target, bucketSize).entries
+	t.mutex.Unlock()
+
+	p := neighbors{Expiration: uint64(time.Now().Add(expiration).Unix())}
+	var sent bool
+
+	for _, n := range closest {
+		p.Nodes = append(p.Nodes, nodeToRPC(n))
+		if len(p.Nodes) == maxNeighbors {
+			t.send(from, neighborsPacket, &p)
+			p.Nodes = p.Nodes[:0]
+			sent = true
+		}
+	}
+	if len(p.Nodes) > 0 || !sent {
+		// 发出去未放满的 packet, 或者是空的 packet
+		t.send(from, neighborsPacket, &p)
+	}
+	return nil
+}
+
+func (req *findnode) name() string {
+	return "FINDNODE/v4"
+}
+
+func (req *neighbors) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
+	if expired(req.Expiration) {
+		return errExpired
+	}
+	fmt.Println("neighbor packet to be handled...")
+	return nil
+}
+
+func (req *neighbors) name() string {
+	return "NEIGHBORS/v4"
+}

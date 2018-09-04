@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"math/big"
 	"net"
 	"net/url"
 	"regexp"
@@ -132,6 +133,25 @@ func HexID(in string) (NodeID, error) {
 	return id, nil
 }
 
+/*
+	通过 NodeID 恢复 PublicKey
+	NodeID ==> PublicKey
+*/
+func (id NodeID) Pubkey() (*ecdsa.PublicKey, error) {
+	p := &ecdsa.PublicKey{Curve: crypto.S256(), X: new(big.Int), Y: new(big.Int)}
+	half := len(id) / 2
+	p.X.SetBytes(id[:half])
+	p.Y.SetBytes(id[half:])
+	if !p.Curve.IsOnCurve(p.X, p.Y) {
+		return nil, errors.New("id is invalid secp256k1 curve point")
+	}
+	return p, nil
+}
+
+/*
+	通过 PublicKey 生成 NodeID
+	PublicKey ==> NodeID
+*/
 func PubkeyID(pub *ecdsa.PublicKey) NodeID {
 	var id NodeID
 	pbytes := elliptic.Marshal(pub.Curve, pub.X, pub.Y)

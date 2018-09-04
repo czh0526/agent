@@ -14,6 +14,7 @@ import (
 )
 
 const (
+	alpha           = 3 // lookup 过程中，findnode() 并行执行的数量
 	maxReplacements = 10
 
 	bucketSize        = 16
@@ -138,8 +139,8 @@ type Table struct {
 	closed     chan struct{}
 
 	bondmu    sync.Mutex
-	bonding   map[NodeID]*bondproc
-	bondslots chan struct{}
+	bonding   map[NodeID]*bondproc // controling bond(), 避免对同一个 Node 同时进行多次握手
+	bondslots chan struct{}        // controling pingpong(), 避免并行发起的握手过程超过16个
 
 	net  transport
 	self *Node
@@ -207,9 +208,9 @@ func (tab *Table) Lookup(targetID NodeID) []*Node {
 func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 	var (
 		target         = crypto.Keccak256Hash(targetID[:])
-		asked          = make(map[NodeID]bool)
-		seen           = make(map[NodeID]bool)
-		reply          = make(chan []*Node, 3)
+		asked          = make(map[NodeID]bool) // 发送过 findnode 消息的节点集合
+		seen           = make(map[NodeID]bool) // 发回响应的节点集合
+		reply          = make(chan []*Node, alpha)
 		pendingQueries = 0
 		result         *nodesByDistance
 	)
@@ -231,8 +232,8 @@ func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 	}
 
 	for {
-		// 针对每个 Node 执行 findnode() 操作
-		for i := 0; i < len(result.entries) && pendingQueries < 3; i++ {
+		// 针对每个 Node, 并发执行 findnode() 操作
+		for i := 0; i < len(result.entries) && pendingQueries < alpha; i++ {
 			n := result.entries[i]
 			if !asked[n.ID] {
 				asked[n.ID] = true
@@ -256,12 +257,14 @@ func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 			break
 		}
 
+		// 保存一个 findnode() 返回例程的执行结果
 		for _, n := range <-reply {
 			if n != nil && !seen[n.ID] {
 				seen[n.ID] = true
 				result.push(n, bucketSize)
 			}
 		}
+		// 并发例程数量减 1
 		pendingQueries--
 	}
 
@@ -366,6 +369,7 @@ func (tab *Table) doRefresh(done chan struct{}) {
 	tab.lookup(tab.self.ID, false)
 }
 
+// 检测种子节点的有效性，并将种子节点加入 Table
 func (tab *Table) loadSeedNodes(bond bool) {
 	// 将 bootnodes 加入 seeds
 	seeds := make([]*Node, 0, 10)
@@ -421,10 +425,11 @@ func (tab *Table) isInitDone() bool {
 	}
 }
 
+// 异步方式实现的同步函数
 func (tab *Table) bondall(nodes []*Node) (result []*Node) {
 	// 通讯管道
 	rc := make(chan *Node, len(nodes))
-	// 启动 bond 流程
+	// 并发启动 bond 流程
 	for i := range nodes {
 		go func(n *Node) {
 			nn, _ := tab.bond(false, n.ID, n.addr(), n.TCP)
@@ -432,6 +437,8 @@ func (tab *Table) bondall(nodes []*Node) (result []*Node) {
 			rc <- nn
 		}(nodes[i])
 	}
+
+	// 同步等待，获取并发握手的结果
 	for range nodes {
 		if n := <-rc; n != nil {
 			result = append(result, n)
@@ -517,8 +524,10 @@ func (tab *Table) pingpong(w *bondproc, pinged bool, id NodeID, addr *net.UDPAdd
 }
 
 func (tab *Table) ping(id NodeID, addr *net.UDPAddr) error {
+	tab.db.updateLastPing(id, time.Now())
 	if err := tab.net.ping(id, addr); err != nil {
 		return err
 	}
+	tab.db.updateBondTime(id, time.Now())
 	return nil
 }

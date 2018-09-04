@@ -135,3 +135,24 @@ func (db *nodeDB) findFails(id NodeID) int {
 func (db *nodeDB) updateFindFails(id NodeID, fails int) error {
 	return db.storeInt64(makeKey(id, nodeDBDiscoverFindFails), int64(fails))
 }
+
+func (db *nodeDB) updateBondTime(id NodeID, instance time.Time) error {
+	return db.storeInt64(makeKey(id, nodeDBDiscoverPong), instance.Unix())
+}
+
+func (db *nodeDB) bondTime(id NodeID) time.Time {
+	return time.Unix(db.fetchInt64(makeKey(id, nodeDBDiscoverPong)), 0)
+}
+
+// 存在并且没过期
+func (db *nodeDB) hasBond(id NodeID) bool {
+	return time.Since(db.bondTime(id)) < nodeDBNodeExpiration
+}
+
+func (db *nodeDB) updateLastPing(id NodeID, instance time.Time) error {
+	return db.storeInt64(makeKey(id, nodeDBDiscoverPing), instance.Unix())
+}
+
+func (db *nodeDB) lastPing(id NodeID) time.Time {
+	return time.Unix(db.fetchInt64(makeKey(id, nodeDBDiscoverPing)), 0)
+}

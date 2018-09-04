@@ -95,7 +95,7 @@ func (self *P2PServer) Start() error {
 		PrivateKey:   privateKey,
 		AnnounceAddr: realaddr,
 		NodeDBPath:   nodeDBPath,
-		Bootnodes:    bootnodes,
+		Bootnodes:    bootnodes, // 作为 [udp]DiscoverTable 发现过程的 nursery.
 	}
 
 	// 构建 discoveryTable(网络节点缓存)
@@ -111,7 +111,7 @@ func (self *P2PServer) Start() error {
 
 	// 启动 tcp 拨号例程
 	self.loopWG.Add(1)
-	dialstate := newDialState(bootnodes, self.ntab, 15)
+	dialstate := newDialState(bootnodes, self.ntab, 15) // bootnodes 作为 [tcp]Dial 连接过程的必要节点
 	go self.run(dialstate)
 
 	return nil

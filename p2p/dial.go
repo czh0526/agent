@@ -134,7 +134,7 @@ type dialTask struct {
 }
 
 func (t *dialTask) Do(srv Server) {
-	<-time.After(time.Millisecond * 500)
+	//<-time.After(time.Millisecond * 500)
 	err := t.dial(srv, t.dest)
 	if err != nil {
 		fmt.Printf("dialTask error: %v \n", err)
