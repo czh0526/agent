@@ -131,8 +131,8 @@ func newUDP(c *net.UDPConn, cfg Config) (*Table, *udp, error) {
 	udp.Table = tab
 
 	// 启动 udp 例程
-	go udp.loop()
-	go udp.readLoop()
+	//go udp.loop()
+	//go udp.readLoop()
 	return tab, udp, nil
 }
 
@@ -184,7 +184,7 @@ func (t *udp) loop() {
 			plist.PushBack(p)
 
 		case r := <-t.gotreply:
-			fmt.Printf("gotreply ==> %v, ", getTypeString(r.ptype))
+			fmt.Printf("gotreply ==> %v \n", getTypeString(r.ptype))
 			var matched bool
 			for el := plist.Front(); el != nil; el = el.Next() {
 				p := el.Value.(*pending)
@@ -349,7 +349,7 @@ func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node
 				fmt.Printf("Invalid neighbor node received, ip = %v, addr = %v, err = %v", rn.IP, toaddr, err)
 				continue
 			}
-			fmt.Printf("[udp]: findnode() --> callback func. node = %v:%v|%v \n", n.IP, n.UDP, n.TCP)
+			fmt.Printf("[udp]: findnode() --> callback func. node = %v:%v|%v \n\n", n.IP, n.UDP, n.TCP)
 			nodes = append(nodes, n)
 		}
 		return nreceived >= bucketSize

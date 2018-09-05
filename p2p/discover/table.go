@@ -276,7 +276,7 @@ func (t *Table) ReadRandomNodes([]*Node) int {
 	return 0
 }
 
-// 取出离 target 最近的 nresults 个结果
+// 遍历k-bucket, 取出离 target 最近的 nresults 个节点
 func (tab *Table) closest(target common.Hash, nresults int) *nodesByDistance {
 	close := &nodesByDistance{target: target}
 	for _, b := range tab.buckets {
