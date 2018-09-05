@@ -349,6 +349,7 @@ func (t *udp) findnode(toid NodeID, toaddr *net.UDPAddr, target NodeID) ([]*Node
 				fmt.Printf("Invalid neighbor node received, ip = %v, addr = %v, err = %v", rn.IP, toaddr, err)
 				continue
 			}
+			fmt.Println("[udp]: findnode() --> callback func. node = %v:%v|%v \n", n.IP, n.UDP, n.TCP)
 			nodes = append(nodes, n)
 		}
 		return nreceived >= bucketSize
