@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	defaultDialTimeout = 15 * time.Second
+	defaultDialTimeout = 150 * time.Second
 	maxActiveDialTasks = 16
 )
 
