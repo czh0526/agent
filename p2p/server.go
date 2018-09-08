@@ -180,6 +180,7 @@ running:
 }
 
 func (self *P2PServer) SetupConn(fd net.Conn, flag connFlag, node *discover.Node) error {
+	log.Info("构建一个 TCP 连接", "dest node", fd.RemoteAddr())
 	c := &conn{fd: fd, flags: flag}
 	err := self.setupConn(c)
 	if err != nil {

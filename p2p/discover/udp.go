@@ -29,7 +29,7 @@ var (
 )
 
 const (
-	respTimeout = 500 * time.Millisecond
+	respTimeout = 2500 * time.Millisecond
 	expiration  = 20 * time.Second
 
 	ntpFailureThreshold = 32
@@ -576,6 +576,7 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	})
 	if !t.handleReply(fromID, pingPacket, req) {
+		log.Info("ping.handle() handleReply error...")
 		go t.bond(true, fromID, from, req.From.TCP)
 	}
 
@@ -589,6 +590,7 @@ func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 		return errExpired
 	}
 	if !t.handleReply(fromID, pongPacket, req) {
+		log.Info("pong.handle() handleReply error...")
 		return errUnsolicitedReply
 	}
 	return nil
@@ -636,6 +638,7 @@ func (req *neighbors) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byt
 		return errExpired
 	}
 	if !t.handleReply(fromID, neighborsPacket, req) {
+		log.Info("neighbors.handle() handleReply error...")
 		return errUnsolicitedReply
 	}
 	return nil
