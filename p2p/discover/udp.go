@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/czh0526/agent/crypto"
+	"github.com/czh0526/agent/log"
 
 	"github.com/czh0526/agent/rlp"
 )
@@ -131,8 +132,13 @@ func newUDP(c *net.UDPConn, cfg Config) (*Table, *udp, error) {
 	udp.Table = tab
 
 	// 启动 udp 例程
-	//go udp.loop()
-	//go udp.readLoop()
+	log.Info(" >> 启动 UDP 消息处理模块.")
+	go udp.loop()
+	log.Info(" << UDP 消息处理模块启动完成.")
+
+	log.Info(" >> 启动 UDP 报文读取循环")
+	go udp.readLoop()
+	log.Info(" << UDP 报文读取循环启动完成.")
 	return tab, udp, nil
 }
 
@@ -248,12 +254,12 @@ func (t *udp) readLoop() {
 	for {
 		nbytes, from, err := t.conn.ReadFromUDP(buf)
 		if err != nil {
-			fmt.Printf("udp -> readLoop: read error: %v \n", err)
+			log.Error(fmt.Sprintf("udp -> readLoop(): read error: %v", err))
 			return
 		}
 
 		if err := t.handlePacket(from, buf[:nbytes]); err != nil {
-
+			log.Error(fmt.Sprintf("udp -> readLoop(): handle error: %v", err))
 		}
 	}
 }
@@ -271,7 +277,7 @@ func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
 }
 
 func printPacket(prefix string, fromID NodeID, packet packet) {
-	fmt.Printf("%v %v <= 0x%x... \n", prefix, packet.name(), fromID[:8])
+	log.Trace(fmt.Sprintf("%v %v <= 0x%x...", prefix, packet.name(), fromID[:8]))
 }
 
 func (t *udp) Stop() {
@@ -387,7 +393,7 @@ func (t *udp) send(toaddr *net.UDPAddr, ptype byte, req packet) ([]byte, error) 
 // 单纯的发送数据包逻辑
 func (t *udp) write(toaddr *net.UDPAddr, what string, packet []byte) error {
 	_, err := t.conn.WriteToUDP(packet, toaddr)
-	fmt.Printf("[udp]: >> %v , addr = %v, err = %v \n", what, toaddr, err)
+	log.Trace(fmt.Sprintf("[udp]: >> %v , addr = %v, err = %v", what, toaddr, err))
 	return err
 }
 
@@ -560,7 +566,7 @@ type (
 )
 
 func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
-	fmt.Printf("[udp] -> ping.handle(): ping <== %v \n", from)
+	log.Trace(fmt.Sprintf("[udp] -> ping.handle(): ping <== %v \n", from))
 	if expired(req.Expiration) {
 		return errExpired
 	}
@@ -578,7 +584,7 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 func (req *ping) name() string { return "PING/v4" }
 
 func (req *pong) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) error {
-	fmt.Printf("[udp] -> pong.handle(): pong <== %v \n", from)
+	log.Trace(fmt.Sprintf("[udp] -> pong.handle(): pong <== %v \n", from))
 	if expired(req.Expiration) {
 		return errExpired
 	}

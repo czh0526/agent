@@ -8,6 +8,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/czh0526/agent/log"
 	"github.com/czh0526/agent/p2p/discover"
 )
 
@@ -116,7 +117,7 @@ type dialstate struct {
 	maxDynDials int
 	ntab        discoverTable
 
-	lookupRunning bool
+	lookupRunning bool             // discoverTask 是否正在执行
 	lookupBuf     []*discover.Node // discoverTask 任务的执行结果
 	dialing       map[discover.NodeID]connFlag
 	randomNodes   []*discover.Node
@@ -144,6 +145,7 @@ type dialError struct {
 }
 
 type task interface {
+	Type() string
 	Do(Server)
 }
 
@@ -154,11 +156,15 @@ type dialTask struct {
 	resolveDelay time.Duration
 }
 
+func (t *dialTask) Type() string {
+	return "dialTask"
+}
+
 func (t *dialTask) Do(srv Server) {
-	//<-time.After(time.Millisecond * 500)
+	log.Debug("dialTask.Do()", "dest node", t.dest)
 	err := t.dial(srv, t.dest)
 	if err != nil {
-		fmt.Printf("dialTask error: %v \n", err)
+		log.Error("dialTask.Do()", "error", err)
 	}
 }
 
@@ -178,11 +184,15 @@ type discoverTask struct {
 	results []*discover.Node
 }
 
+func (t *discoverTask) Type() string {
+	return "discoverTask"
+}
+
 func (t *discoverTask) Do(srv Server) {
-	<-time.After(time.Millisecond * 500)
 	var target discover.NodeID
 	rand.Read(target[:])
 	t.results = srv.Lookup(target)
+	log.Debug("discoverTask.Do()", "find nodes num", len(t.results))
 }
 
 func (t *discoverTask) String() string {
@@ -195,6 +205,10 @@ func (t *discoverTask) String() string {
 
 type waitExpireTask struct {
 	time.Duration
+}
+
+func (t waitExpireTask) Type() string {
+	return "waitExpireTask"
 }
 
 func (t waitExpireTask) Do(Server) {
@@ -288,15 +302,15 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 	if len(s.lookupBuf) < needDynDials && !s.lookupRunning {
 		s.lookupRunning = true
 		newtasks = append(newtasks, &discoverTask{})
+		log.Trace("[dialstate] -> newTasks(): 没有足够的 dialTask，构建一个 discoverTask.")
 	}
-	fmt.Printf("[dialstate] -> newTasks(): 没有足够的 dialTask，构建一个 discoverTask. \n")
 
 	// waitExpireTask ==> newtasks
 	if nRunning == 0 && len(newtasks) == 0 {
 		t := &waitExpireTask{s.hist.min().exp.Sub(now)}
 		newtasks = append(newtasks, t)
+		log.Trace("[dialstate] -> newTasks(): 不能创建 dialTask 和 discoverTask, 构建一个 waitExpireTask, 准备重连历史节点.")
 	}
-	fmt.Println()
 	return newtasks
 }
 

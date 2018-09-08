@@ -1,6 +1,8 @@
 package discover
 
 import (
+	crand "crypto/rand"
+	"encoding/binary"
 	"errors"
 	"fmt"
 	mrand "math/rand"
@@ -8,6 +10,8 @@ import (
 	"sort"
 	"sync"
 	"time"
+
+	"github.com/czh0526/agent/log"
 
 	"github.com/czh0526/agent/common"
 	"github.com/czh0526/agent/crypto"
@@ -175,7 +179,9 @@ func newTable(t transport, ourID NodeID, ourAddr *net.UDPAddr, nodeDBPath string
 		tab.buckets[i] = &bucket{}
 	}
 
+	log.Info(" >> 启动 discoverTable 模块.")
 	go tab.loop()
+	log.Info(" << discoverTable 模块启动完成.")
 	return tab, nil
 }
 
@@ -200,6 +206,9 @@ func (t *Table) Resolve(target NodeID) *Node {
 	return nil
 }
 
+/*
+	根据现有的 K-bucket, 查找指定的 targetID
+*/
 func (tab *Table) Lookup(targetID NodeID) []*Node {
 	return tab.lookup(targetID, true)
 }
@@ -222,6 +231,7 @@ func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 		// 获取矢量距离最近的节点
 		result = tab.closest(target, bucketSize)
 		tab.mutex.Unlock()
+		log.Trace("[Table]: 获取 target 的邻居节点", "refreshIfEmpty", refreshIfEmpty, "target closest node", len(result.entries))
 		if len(result.entries) > 0 || !refreshIfEmpty {
 			break
 		}
@@ -288,7 +298,7 @@ func (tab *Table) closest(target common.Hash, nresults int) *nodesByDistance {
 }
 
 func (tab *Table) refresh() <-chan struct{} {
-	fmt.Println("[Table]: 请求刷新 K-bucket.")
+	log.Debug("[Table]: 请求刷新 K-bucket.")
 	done := make(chan struct{})
 	select {
 	case tab.refreshReq <- done:
@@ -320,17 +330,26 @@ func (tab *Table) loop() {
 loop:
 	for {
 		select {
+		case <-refresh.C:
+			tab.seedRand()
+			if refreshDone == nil {
+				refreshDone = make(chan struct{})
+				go tab.doRefresh(refreshDone)
+			}
+
 		case req := <-tab.refreshReq:
-			// 将请求排队
+			log.Debug("[Table]: 处理 K-bucket 的刷新请求", "refreshDone", refreshDone)
 			waiting = append(waiting, req)
 			// 当前没有 doRefresh() 在执行
 			if refreshDone == nil {
 				// 为新一轮的 doRefresh() 执行重新生成信号灯变量
 				refreshDone = make(chan struct{})
 				// 启动 doRefresh()
+				log.Debug("[Table]: 启动 doRefresh() 例程")
 				go tab.doRefresh(refreshDone)
 			}
 		case <-refreshDone: // 检测 doRefresh() 结束
+			log.Debug("[Table]: K-bucket 的刷新结束.")
 			// 批量设置排队请求的 chan 变量
 			for _, ch := range waiting {
 				close(ch)
@@ -361,12 +380,25 @@ loop:
 	close(tab.closed)
 }
 
+/*
+	通过 seed nodes, 找自己的邻居节点
+*/
 func (tab *Table) doRefresh(done chan struct{}) {
 	defer close(done)
 
-	fmt.Println("[Table] -> doRefresh():")
+	log.Trace("[Table]: 填充 seed nodes.")
 	tab.loadSeedNodes(true)
+	log.Trace("[Table]: 基于 seed nodes，通过 lookup(), 找自己的邻居节点.")
 	tab.lookup(tab.self.ID, false)
+}
+
+func (tab *Table) seedRand() {
+	var b [8]byte
+	crand.Read(b[:])
+
+	tab.mutex.Lock()
+	tab.rand.Seed(int64(binary.BigEndian.Uint64(b[:])))
+	tab.mutex.Unlock()
 }
 
 // 检测种子节点的有效性，并将种子节点加入 Table
@@ -382,6 +414,7 @@ func (tab *Table) loadSeedNodes(bond bool) {
 	for i := range seeds {
 		seed := seeds[i]
 		tab.add(seed)
+		log.Debug("[Table]: 加入一个 node.", "Node IP", seed.IP)
 	}
 }
 
@@ -432,6 +465,7 @@ func (tab *Table) bondall(nodes []*Node) (result []*Node) {
 	// 并发启动 bond 流程
 	for i := range nodes {
 		go func(n *Node) {
+			log.Trace("启动 bond 过程", "target node", n.IP)
 			nn, _ := tab.bond(false, n.ID, n.addr(), n.TCP)
 			// 序列化返回值
 			rc <- nn
@@ -456,9 +490,9 @@ func (tab *Table) bond(pinged bool, id NodeID, addr *net.UDPAddr, tcpPort uint16
 	}
 
 	if pinged {
-		fmt.Println("response ping message ...")
+		log.Trace("[UDP]: 进入 bond 过程 --> 响应 ping 消息 ...")
 	} else {
-		fmt.Println("initial ping message ... ")
+		log.Trace("[UDP]: 进入 bond 过程 --> 发起 ping 消息 ... ")
 	}
 	if pinged && !tab.isInitDone() {
 		return nil, errors.New("still initializing")

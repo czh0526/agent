@@ -1,7 +1,7 @@
 package agent
 
 import (
-	"fmt"
+	"github.com/czh0526/agent/log"
 
 	"github.com/czh0526/agent/p2p"
 	"github.com/czh0526/agent/rpc"
@@ -26,10 +26,12 @@ func NewAgent() (*Agent, error) {
 }
 
 func (self *Agent) Start() error {
+	log.Info("--> 启动 P2P Server.")
 	if err := self.P2PServer.Start(); err != nil {
-		fmt.Println("[P2PServer] -> Start() error: %v", err)
+		log.Error("[P2PServer] -> Start() error: %v", err)
 		return err
 	}
+	log.Info("<-- P2P Server 启动成功.")
 
 	/*
 		if err := self.RPCServer.Start(); err != nil {
@@ -42,7 +44,14 @@ func (self *Agent) Start() error {
 }
 
 func (self *Agent) Stop() error {
-	go self.P2PServer.Stop()
+	go func() {
+		log.Info("--> 关闭 P2P Server.")
+		if err := self.P2PServer.Stop(); err != nil {
+			log.Error("P2P Server 关闭失败.")
+			return
+		}
+		log.Info("<-- P2P Server 关闭成功.")
+	}()
 	//go self.RPCServer.Stop()
 	// 通知外部程序，agent终止
 	close(self.stop)

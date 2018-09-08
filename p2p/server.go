@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/czh0526/agent/crypto"
+	"github.com/czh0526/agent/log"
 	"github.com/czh0526/agent/p2p/discover"
 )
 
@@ -64,7 +65,7 @@ func (self *P2PServer) Start() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("[P2PServer] -> Start(): realaddr = %v \n", realaddr)
+	log.Info("监听 UDP", "udp address", realaddr)
 
 	bootnodes := []*discover.Node{
 		discover.MustParseNode("enode://0f231b57ffe1a1b69dcd5e6fbed3ea4bc2e903eae6e6295aca2abf92e264652945219403ecdb99a8523c485e6dfd05f1124d332feb89397820843ee7ed2b3a1f@139.199.100.150:65353"),
@@ -79,7 +80,7 @@ func (self *P2PServer) Start() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("self NodeID = %v \n", discover.PubkeyID(&privateKey.PublicKey).String())
+	log.Info("加载 nodekey", "NodeID", discover.PubkeyID(&privateKey.PublicKey).String())
 
 	nodeDBPath, err := filepath.Abs("./nodes")
 	if err != nil {
@@ -101,18 +102,22 @@ func (self *P2PServer) Start() error {
 	// 构建 discoveryTable(网络节点缓存)
 	tab, err := discover.ListenUDP(conn, cfg)
 	self.ntab = tab
+	log.Info("构建 discoverTable.")
 
 	// 启动 tcp 监听
 	if self.ListenAddr != "" {
 		if err := self.startListening(); err != nil {
 			return err
 		}
+		log.Info("监听 TCP", "Listen Address", self.ListenAddr)
 	}
 
 	// 启动 tcp 拨号例程
 	self.loopWG.Add(1)
 	dialstate := newDialState(bootnodes, self.ntab, 15) // bootnodes 作为 [tcp]Dial 连接过程的必要节点
+	log.Info("构建 dialstate, 管理拨号状态.")
 	go self.run(dialstate)
+	log.Info("进入循环：构建各种 Task 并执行.")
 
 	return nil
 }
@@ -227,6 +232,7 @@ func (self *P2PServer) run(dialstate dialer) {
 		for ; len(runningTasks) < maxActiveDialTasks && i < len(ts); i++ {
 			t := ts[i]
 			go func() {
+				log.Trace("启动任务", "task", t.Type())
 				t.Do(self)
 				taskdone <- t
 			}()
@@ -241,6 +247,7 @@ func (self *P2PServer) run(dialstate dialer) {
 		if len(runningTasks) < maxActiveDialTasks {
 			// 新构建一批任务
 			nt := dialstate.newTasks(len(runningTasks)+len(queuedTasks), peers, time.Now())
+			log.Debug("newTasks() --> startTasks() ", "task num", len(nt))
 			// 分别放入 runningTasks 和 queuedTasks 中
 			queuedTasks = append(queuedTasks, startTasks(nt)...)
 		}
@@ -248,8 +255,8 @@ func (self *P2PServer) run(dialstate dialer) {
 
 running:
 	for {
-		fmt.Printf("[P2PServer]: peer number = %v \n", len(peers))
-		scheduleTasks()
+		log.Trace("P2PServer.run() ->", "peer number", len(peers))
+		scheduleTasks() // 如果未能成功启动 Task,
 
 		// 监听外部退出事件
 		select {
