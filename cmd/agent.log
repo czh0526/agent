@@ -1,0 +1,22 @@
+t=2018-09-09T23:30:34+0800 lvl=info msg=日志系统初始化成功.
+t=2018-09-09T23:30:34+0800 lvl=info msg="main.Action 启动."
+t=2018-09-09T23:30:34+0800 lvl=info msg="--> 启动 P2P Server."
+t=2018-09-09T23:30:34+0800 lvl=info msg="监听 UDP"             udp address=[::]:65353
+t=2018-09-09T23:30:34+0800 lvl=info msg="加载 nodekey"         NodeID=913416ec113671505ba3a532a884a337d7303837c2e6e0aebf7754f0fdf6db976c6b314e769fb01bef49be52bbee03d32a4901609c4d1fe992024ba7ca8edc5d
+t=2018-09-09T23:30:34+0800 lvl=info msg=" >> 启动 discoverTable 模块."
+t=2018-09-09T23:30:34+0800 lvl=info msg=" << discoverTable 模块启动完成."
+t=2018-09-09T23:30:34+0800 lvl=info msg=" >> 启动 UDP 消息处理模块."
+t=2018-09-09T23:30:34+0800 lvl=info msg=" << UDP 消息处理模块启动完成."
+t=2018-09-09T23:30:34+0800 lvl=info msg=" >> 启动 UDP 报文读取循环"
+t=2018-09-09T23:30:34+0800 lvl=info msg=" << UDP 报文读取循环启动完成."
+t=2018-09-09T23:30:34+0800 lvl=info msg="构建 discoverTable."
+t=2018-09-09T23:30:34+0800 lvl=info msg="监听 TCP"                    Listen Address=[::]:65353
+t=2018-09-09T23:30:34+0800 lvl=info msg="构建 dialstate, 管理拨号状态."
+t=2018-09-09T23:30:34+0800 lvl=info msg="进入循环：构建各种 Task 并执行."
+t=2018-09-09T23:30:34+0800 lvl=info msg="<-- P2P Server 启动成功."
+t=2018-09-09T23:30:34+0800 lvl=info msg="连接方：构建一个 TCP 连接"           dest node=139.199.100.150 port=65353
+t=2018-09-09T23:30:44+0800 lvl=info msg="连接方：构建一个 TCP 连接"           dest node=192.144.147.36  port=65353
+t=2018-09-09T23:31:04+0800 lvl=info msg="连接方：构建一个 TCP 连接"           dest node=139.199.100.150 port=65353
+t=2018-09-09T23:31:14+0800 lvl=info msg="连接方：构建一个 TCP 连接"           dest node=192.144.147.36  port=65353
+t=2018-09-09T23:31:37+0800 lvl=info msg="连接方：构建一个 TCP 连接"           dest node=139.199.100.150 port=65353
+t=2018-09-09T23:31:47+0800 lvl=info msg="连接方：构建一个 TCP 连接"           dest node=192.144.147.36  port=65353
