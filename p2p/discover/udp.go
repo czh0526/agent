@@ -194,6 +194,7 @@ func (t *udp) loop() {
 			var matched bool
 			for el := plist.Front(); el != nil; el = el.Next() {
 				p := el.Value.(*pending)
+				log.Info("got reply", "p.from", p.from, "r.from", r.from, "p.ptype", p.ptype, "r.ptype", r.ptype)
 				if p.from == r.from && p.ptype == r.ptype {
 					matched = true
 					if p.callback(r.data) {
