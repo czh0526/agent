@@ -173,6 +173,7 @@ func (t *dialTask) dial(srv Server, dest *discover.Node) error {
 	if err != nil {
 		return &dialError{err}
 	}
+	log.Info("连接方：构建一个 TCP 连接", "dest node", dest.IP)
 	return srv.SetupConn(fd, t.flags, dest)
 }
 

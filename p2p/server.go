@@ -171,6 +171,7 @@ running:
 		fmt.Printf("[P2PServer] => listenLoop(): get a conn from %v \n", fd.LocalAddr())
 
 		go func() {
+			log.Info("监听方：构建一个 TCP 连接", "dest node", fd.RemoteAddr())
 			self.SetupConn(fd, inboundConn, nil)
 			// 归还一个令牌
 			slots <- struct{}{}
@@ -180,7 +181,6 @@ running:
 }
 
 func (self *P2PServer) SetupConn(fd net.Conn, flag connFlag, node *discover.Node) error {
-	log.Info("构建一个 TCP 连接", "dest node", fd.RemoteAddr())
 	c := &conn{fd: fd, flags: flag}
 	err := self.setupConn(c)
 	if err != nil {

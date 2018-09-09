@@ -576,7 +576,6 @@ func (req *ping) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte) er
 		Expiration: uint64(time.Now().Add(expiration).Unix()),
 	})
 	if !t.handleReply(fromID, pingPacket, req) {
-		log.Info("ping.handle() handleReply error...")
 		go t.bond(true, fromID, from, req.From.TCP)
 	}
 
