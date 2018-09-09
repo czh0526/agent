@@ -268,10 +268,15 @@ running:
 			delTask(t)
 		case c := <-self.addpeer:
 			p := newPeer(c)
+			go self.runPeer(p)
 			peers[c.id] = p
 		}
 	}
 	fmt.Println("[P2PServer] -> loop(): exited.")
+}
+
+func (self *P2PServer) runPeer(p *Peer) {
+	p.run()
 }
 
 func (self *P2PServer) Stop() error {
