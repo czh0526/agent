@@ -7,6 +7,10 @@ import (
 	"github.com/czh0526/agent/log"
 )
 
+const (
+	pingInterval = 15 * time.Second
+)
+
 type Peer struct {
 	rw *conn
 	wg sync.WaitGroup
