@@ -4,7 +4,7 @@
 #Files
 *.exe
 *.test
-debug
+*/debug
 cmd/nodekey
 cmd/nodes
 cmd/agent.log
