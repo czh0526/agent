@@ -219,7 +219,10 @@ func (t *udp) loop() {
 				if now.After(p.deadline) || now.Equal(p.deadline) {
 					p.errc <- errTimeout
 					plist.Remove(el)
-					log.Info("删除过期的 pending 消息.", "type", getTypeString(p.ptype), "deadline", fmt.Sprintf("%v", p.deadline))
+					log.Info("删除过期的 pending 消息.",
+						"type", getTypeString(p.ptype),
+						"from", fmt.Sprintf("%x...", p.from[:8]),
+						"deadline", fmt.Sprintf("%v", p.deadline))
 					contTimeouts++
 				}
 			}
