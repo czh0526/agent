@@ -7,3 +7,4 @@
 debug
 cmd/nodekey
 cmd/nodes
+cmd/agent.log
