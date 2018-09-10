@@ -214,8 +214,8 @@ func (t *udp) loop() {
 				p := el.Value.(*pending)
 				if now.After(p.deadline) || now.Equal(p.deadline) {
 					p.errc <- errTimeout
-					//plist.Remove(el)
-					//log.Info("Remove an expired pending obj", "type", getTypeString(p.ptype))
+					plist.Remove(el)
+					log.Info("Remove an expired pending obj", "type", getTypeString(p.ptype), "deadline", fmt.Sprintf("%v", p.deadline))
 					contTimeouts++
 				}
 			}
