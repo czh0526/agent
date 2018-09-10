@@ -125,6 +125,7 @@ func newUDP(c *net.UDPConn, cfg Config) (*Table, *udp, error) {
 	}
 
 	udp.ourEndpoint = makeEndpoint(realaddr, uint16(realaddr.Port))
+	log.Info("构建本地节点地址", "ourEndpoint", udp.ourEndpoint)
 	tab, err := newTable(udp, PubkeyID(&cfg.PrivateKey.PublicKey), realaddr, cfg.NodeDBPath, cfg.Bootnodes)
 	if err != nil {
 		return nil, nil, err

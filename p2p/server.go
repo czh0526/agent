@@ -68,7 +68,7 @@ func (self *P2PServer) Start() error {
 	log.Info("监听 UDP", "udp address", realaddr)
 
 	bootnodes := []*discover.Node{
-		discover.MustParseNode("enode://0f231b57ffe1a1b69dcd5e6fbed3ea4bc2e903eae6e6295aca2abf92e264652945219403ecdb99a8523c485e6dfd05f1124d332feb89397820843ee7ed2b3a1f@139.199.100.150:65353"),
+		discover.MustParseNode("enode://913416ec113671505ba3a532a884a337d7303837c2e6e0aebf7754f0fdf6db976c6b314e769fb01bef49be52bbee03d32a4901609c4d1fe992024ba7ca8edc5d@139.199.100.150:65353"),
 	}
 
 	// 加载私钥
@@ -257,6 +257,7 @@ func (self *P2PServer) run(dialstate dialer) {
 running:
 	for {
 		log.Trace("P2PServer.run() ->", "peer number", len(peers))
+		<-time.After(time.Second * 3)
 		scheduleTasks() // 如果未能成功启动 Task,
 
 		// 监听外部退出事件
