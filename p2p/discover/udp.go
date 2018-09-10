@@ -185,9 +185,9 @@ func (t *udp) loop() {
 			}
 			return
 		case p := <-t.addpending:
-			fmt.Printf("addpending ==> %v ==> plist \n", getTypeString(p.ptype))
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
+			log.Info("addpending <== msg.", "type", getTypeString(p.ptype), "time", p.deadline)
 
 		case r := <-t.gotreply:
 			fmt.Printf("gotreply ==> %v \n", getTypeString(r.ptype))
@@ -292,7 +292,6 @@ func (t *udp) pending(id NodeID, ptype byte, callback func(interface{}) bool) <-
 	// 将 pending 对象纳入管理
 	select {
 	case t.addpending <- p:
-		fmt.Printf("addpending <== %v \n", getTypeString(p.ptype))
 	case <-t.closing:
 		ch <- errClosed
 	}
