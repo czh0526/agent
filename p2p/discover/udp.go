@@ -199,7 +199,7 @@ func (t *udp) loop() {
 					if p.callback(r.data) {
 						p.errc <- nil
 						plist.Remove(el)
-						fmt.Printf("plist =\\=> %v \n", getTypeString(p.ptype))
+						log.Info("得到一个消息，从 pending 队列中删除.", "type", getTypeString(p.ptype), "time", p.deadline)
 					}
 					contTimeouts = 0
 				}

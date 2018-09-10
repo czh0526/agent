@@ -1,0 +1,531 @@
+t=2018-09-10T17:23:47+0800 lvl=info msg=日志系统初始化成功.
+t=2018-09-10T17:23:47+0800 lvl=info msg="main.Action 启动."
+t=2018-09-10T17:23:47+0800 lvl=info msg="--> 启动 P2P Server."
+t=2018-09-10T17:23:47+0800 lvl=info msg="监听 UDP"             udp address=[::]:65353
+t=2018-09-10T17:23:47+0800 lvl=info msg="加载 nodekey"         NodeID=913416ec113671505ba3a532a884a337d7303837c2e6e0aebf7754f0fdf6db976c6b314e769fb01bef49be52bbee03d32a4901609c4d1fe992024ba7ca8edc5d
+t=2018-09-10T17:23:47+0800 lvl=info msg=" >> 启动 discoverTable 模块."
+t=2018-09-10T17:23:47+0800 lvl=info msg=" << discoverTable 模块启动完成."
+t=2018-09-10T17:23:47+0800 lvl=info msg=" >> 启动 UDP 消息处理模块."
+t=2018-09-10T17:23:47+0800 lvl=info msg=" << UDP 消息处理模块启动完成."
+t=2018-09-10T17:23:47+0800 lvl=info msg=" >> 启动 UDP 报文读取循环"
+t=2018-09-10T17:23:47+0800 lvl=info msg=" << UDP 报文读取循环启动完成."
+t=2018-09-10T17:23:47+0800 lvl=info msg="构建 discoverTable."
+t=2018-09-10T17:23:47+0800 lvl=info msg="监听 TCP"                    Listen Address=[::]:65353
+t=2018-09-10T17:23:47+0800 lvl=info msg="构建 dialstate, 管理拨号状态."
+t=2018-09-10T17:23:47+0800 lvl=info msg="进入循环：构建各种 Task 并执行."
+t=2018-09-10T17:23:47+0800 lvl=info msg="<-- P2P Server 启动成功."
+t=2018-09-10T17:23:47+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:23:47+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求" refreshDone=0xc042016060
+t=2018-09-10T17:23:47+0800 lvl=info msg="连接方：构建一个 TCP 连接"            dest node=139.199.100.150 port=65353
+t=2018-09-10T17:23:47+0800 lvl=info msg="pong.handle() handleReply error..."
+t=2018-09-10T17:23:47+0800 lvl=eror msg="udp -> readLoop(): handle error: unsolicited reply"
+t=2018-09-10T17:23:50+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:23:50.4864541 +0800 CST m=+2.651592601"
+t=2018-09-10T17:23:50+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:23:50+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:23:50+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:23:50+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:23:52+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:23:52.9927576 +0800 CST m=+5.157896101"
+t=2018-09-10T17:23:52+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:23:52+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:23:52+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:23:52+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:23:55+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:23:55.4980643 +0800 CST m=+7.663202801"
+t=2018-09-10T17:23:55+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:23:55+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:23:55+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:23:55+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:23:58+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:23:58.0023659 +0800 CST m=+10.167504401"
+t=2018-09-10T17:23:58+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:23:58+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:23:58+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:23:58+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:00+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:00.509664 +0800 CST m=+12.674802501"
+t=2018-09-10T17:24:00+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:00+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:00+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:00+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:03+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:03.0160019 +0800 CST m=+15.181140401"
+t=2018-09-10T17:24:03+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:03+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:03+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:03+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:05+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:05.5282512 +0800 CST m=+17.693389701"
+t=2018-09-10T17:24:05+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:05+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:05+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:05+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:08+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:08.0325906 +0800 CST m=+20.197729001"
+t=2018-09-10T17:24:08+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:08+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:08+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:08+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:10+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:10.540856 +0800 CST m=+22.705994501"
+t=2018-09-10T17:24:10+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:10+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:10+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:10+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:13+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:13.054138 +0800 CST m=+25.219276501"
+t=2018-09-10T17:24:13+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:13+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:13+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:13+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:15+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:15+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:15.5624344 +0800 CST m=+27.727572901"
+t=2018-09-10T17:24:15+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:15+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:15+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:18+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:18.0717246 +0800 CST m=+30.236863101"
+t=2018-09-10T17:24:18+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:18+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:18+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:18+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:20+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:20+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:20.5750336 +0800 CST m=+32.740172001"
+t=2018-09-10T17:24:20+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:20+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:20+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:23+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:23.0783448 +0800 CST m=+35.243483201"
+t=2018-09-10T17:24:23+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:23+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:23+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:23+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:25+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:25.5916872 +0800 CST m=+37.756825601"
+t=2018-09-10T17:24:25+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:25+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:25+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:25+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:28+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:28.094933 +0800 CST m=+40.260071501"
+t=2018-09-10T17:24:28+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:28+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:28+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:28+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:30+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:30+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:30.6002401 +0800 CST m=+42.765378601"
+t=2018-09-10T17:24:30+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:30+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:30+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:33+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:33.1035476 +0800 CST m=+45.268686001"
+t=2018-09-10T17:24:33+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:33+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:33+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:33+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:35+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:35.6118915 +0800 CST m=+47.777030001"
+t=2018-09-10T17:24:35+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:35+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:35+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:35+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:38+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:38.1201423 +0800 CST m=+50.285280701"
+t=2018-09-10T17:24:38+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:38+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:38+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:38+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:40+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:40.6274385 +0800 CST m=+52.792576901"
+t=2018-09-10T17:24:40+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:40+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:40+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:40+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:43+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:43.1297483 +0800 CST m=+55.294886801"
+t=2018-09-10T17:24:43+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:43+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:43+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:43+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:45+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:45.63605 +0800 CST m=+57.801188401"
+t=2018-09-10T17:24:45+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:45+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:45+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:45+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:48+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:48.1433941 +0800 CST m=+60.308532601"
+t=2018-09-10T17:24:48+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:48+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:48+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:48+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:50+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:50.6556427 +0800 CST m=+62.820781101"
+t=2018-09-10T17:24:50+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:50+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:50+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:50+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:53+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:53.1579793 +0800 CST m=+65.323117801"
+t=2018-09-10T17:24:53+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:53+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:53+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:53+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:55+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:55.6662497 +0800 CST m=+67.831388201"
+t=2018-09-10T17:24:55+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:55+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:55+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:55+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:24:58+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:24:58.1735935 +0800 CST m=+70.338731901"
+t=2018-09-10T17:24:58+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:24:58+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:24:58+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:24:58+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:00+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:00.6838725 +0800 CST m=+72.849011001"
+t=2018-09-10T17:25:00+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:00+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:00+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:00+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:03+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:03.1871373 +0800 CST m=+75.352275801"
+t=2018-09-10T17:25:03+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:03+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:03+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:03+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:05+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:05.6944441 +0800 CST m=+77.859582601"
+t=2018-09-10T17:25:05+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:05+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:05+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:05+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:08+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:08.2087153 +0800 CST m=+80.373853801"
+t=2018-09-10T17:25:08+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:08+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:08+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:08+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:10+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:10.7160497 +0800 CST m=+82.881188101"
+t=2018-09-10T17:25:10+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:10+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:10+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:10+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:13+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:13.2233164 +0800 CST m=+85.388454901"
+t=2018-09-10T17:25:13+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:13+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:13+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:13+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:15+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:15.7266197 +0800 CST m=+87.891758201"
+t=2018-09-10T17:25:15+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:15+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:15+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:15+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:18+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:18.2379647 +0800 CST m=+90.403103201"
+t=2018-09-10T17:25:18+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:18+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:18+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:18+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:20+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:20.7432537 +0800 CST m=+92.908392101"
+t=2018-09-10T17:25:20+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:20+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:20+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:20+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:23+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:23.250514 +0800 CST m=+95.415652501"
+t=2018-09-10T17:25:23+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:23+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:23+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:23+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:25+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:25.7548178 +0800 CST m=+97.919956301"
+t=2018-09-10T17:25:25+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:25+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:25+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:25+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:28+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:28.2621159 +0800 CST m=+100.427254401"
+t=2018-09-10T17:25:28+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:28+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:28+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:28+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:30+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:30.7724086 +0800 CST m=+102.937547101"
+t=2018-09-10T17:25:30+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:30+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:30+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:30+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:33+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:33.2767174 +0800 CST m=+105.441855901"
+t=2018-09-10T17:25:33+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:33+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:33+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:33+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:35+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:35.7880008 +0800 CST m=+107.953139301"
+t=2018-09-10T17:25:35+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:35+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:35+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:35+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:38+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:38.2923062 +0800 CST m=+110.457444701"
+t=2018-09-10T17:25:38+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:38+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:38+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:38+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:40+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:40.7966169 +0800 CST m=+112.961755301"
+t=2018-09-10T17:25:40+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:40+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:40+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:40+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:43+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:43.2989241 +0800 CST m=+115.464062601"
+t=2018-09-10T17:25:43+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:43+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:43+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:43+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:45+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:45.801237 +0800 CST m=+117.966375401"
+t=2018-09-10T17:25:45+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:45+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:45+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:45+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:48+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:48.3095719 +0800 CST m=+120.474710401"
+t=2018-09-10T17:25:48+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:48+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:48+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:48+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:50+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:50.8138856 +0800 CST m=+122.979024001"
+t=2018-09-10T17:25:50+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:50+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:50+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:50+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:53+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:53.3251263 +0800 CST m=+125.490264801"
+t=2018-09-10T17:25:53+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:53+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:53+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:53+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:55+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:55.8304754 +0800 CST m=+127.995613801"
+t=2018-09-10T17:25:55+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:55+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:55+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:55+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:25:58+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:25:58.3337375 +0800 CST m=+130.498875901"
+t=2018-09-10T17:25:58+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:25:58+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:25:58+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:25:58+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:00+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:00.8360515 +0800 CST m=+133.001190001"
+t=2018-09-10T17:26:00+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:00+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:00+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:00+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:03+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:03.33936 +0800 CST m=+135.504498501"
+t=2018-09-10T17:26:03+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:03+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:03+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:03+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:05+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:05.8467 +0800 CST m=+138.011838501"
+t=2018-09-10T17:26:05+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:05+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:05+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:05+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:08+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:08.3489921 +0800 CST m=+140.514130601"
+t=2018-09-10T17:26:08+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:08+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:08+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:08+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:10+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:10.8603077 +0800 CST m=+143.025446201"
+t=2018-09-10T17:26:10+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:10+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:10+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:10+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:13+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:13.3686075 +0800 CST m=+145.533746001"
+t=2018-09-10T17:26:13+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:13+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:13+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:13+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:15+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:15.8749084 +0800 CST m=+148.040046901"
+t=2018-09-10T17:26:15+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:15+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:15+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:15+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:18+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:18.381156 +0800 CST m=+150.546294501"
+t=2018-09-10T17:26:18+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:18+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:18+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:18+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:20+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:20.8884571 +0800 CST m=+153.053595601"
+t=2018-09-10T17:26:20+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:20+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:20+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:20+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:23+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:23.3937559 +0800 CST m=+155.558894401"
+t=2018-09-10T17:26:23+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:23+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:23+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:23+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:25+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:25.899094 +0800 CST m=+158.064232501"
+t=2018-09-10T17:26:25+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:25+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:25+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:25+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:28+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:28.4094056 +0800 CST m=+160.574544001"
+t=2018-09-10T17:26:28+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:28+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:28+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:28+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:30+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:30.9226826 +0800 CST m=+163.087821101"
+t=2018-09-10T17:26:30+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:30+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:30+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:30+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:33+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:33.4259818 +0800 CST m=+165.591120201"
+t=2018-09-10T17:26:33+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:33+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:33+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:33+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:35+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:35.9312749 +0800 CST m=+168.096413401"
+t=2018-09-10T17:26:35+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:35+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:35+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:35+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:38+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:38.4325611 +0800 CST m=+170.597699601"
+t=2018-09-10T17:26:38+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:38+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:38+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:38+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:40+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:40.9438529 +0800 CST m=+173.108991401"
+t=2018-09-10T17:26:40+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:40+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:40+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:40+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:43+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:43.449189 +0800 CST m=+175.614327501"
+t=2018-09-10T17:26:43+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:43+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:43+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:43+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:45+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:45.9504666 +0800 CST m=+178.115605101"
+t=2018-09-10T17:26:45+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:45+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:45+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:45+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:48+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:48.4567754 +0800 CST m=+180.621913901"
+t=2018-09-10T17:26:48+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:48+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:48+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:48+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:50+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:50.9670598 +0800 CST m=+183.132198301"
+t=2018-09-10T17:26:50+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:50+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:50+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:50+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:53+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:53.4723616 +0800 CST m=+185.637500101"
+t=2018-09-10T17:26:53+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:53+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:53+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:53+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:55+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:55.9796601 +0800 CST m=+188.144798501"
+t=2018-09-10T17:26:55+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:55+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:55+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:55+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:26:58+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:26:58.4830177 +0800 CST m=+190.648156201"
+t=2018-09-10T17:26:58+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:26:58+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:26:58+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:26:58+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:00+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:00.9902671 +0800 CST m=+193.155405601"
+t=2018-09-10T17:27:00+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:00+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:00+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:00+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:03+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:03.49462 +0800 CST m=+195.659758501"
+t=2018-09-10T17:27:03+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:03+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:03+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:03+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:06+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:06.00291 +0800 CST m=+198.168048501"
+t=2018-09-10T17:27:06+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:06+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:06+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:06+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:08+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:08.5051814 +0800 CST m=+200.670319801"
+t=2018-09-10T17:27:08+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:08+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:08+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:08+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:11+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:11.0154846 +0800 CST m=+203.180623101"
+t=2018-09-10T17:27:11+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:11+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:11+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:11+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:13+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:13.5238029 +0800 CST m=+205.688941401"
+t=2018-09-10T17:27:13+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:13+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:13+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:13+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:16+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:16.0351098 +0800 CST m=+208.200248301"
+t=2018-09-10T17:27:16+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:16+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:16+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:16+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:18+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:18.5423569 +0800 CST m=+210.707495401"
+t=2018-09-10T17:27:18+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:18+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:18+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:18+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:21+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:21.0566451 +0800 CST m=+213.221783601"
+t=2018-09-10T17:27:21+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:21+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:21+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:21+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:23+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:23.5619364 +0800 CST m=+215.727074901"
+t=2018-09-10T17:27:23+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:23+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:23+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:23+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:26+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:26.0672846 +0800 CST m=+218.232423101"
+t=2018-09-10T17:27:26+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:26+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:26+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:26+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:28+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:28.5775335 +0800 CST m=+220.742672001"
+t=2018-09-10T17:27:28+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:28+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:28+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:28+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:31+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:31.0828346 +0800 CST m=+223.247973101"
+t=2018-09-10T17:27:31+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:31+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:31+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:31+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:33+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:33.591137 +0800 CST m=+225.756275501"
+t=2018-09-10T17:27:33+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:33+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:33+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:33+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:36+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:36.0994297 +0800 CST m=+228.264568101"
+t=2018-09-10T17:27:36+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:36+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:36+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:36+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:38+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:38.6027696 +0800 CST m=+230.767908001"
+t=2018-09-10T17:27:38+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:38+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:38+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:38+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:41+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:41.1090452 +0800 CST m=+233.274183601"
+t=2018-09-10T17:27:41+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:41+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:41+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:41+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:43+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:43.6163802 +0800 CST m=+235.781518701"
+t=2018-09-10T17:27:43+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:43+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:43+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:43+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:46+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:46.1226354 +0800 CST m=+238.287773901"
+t=2018-09-10T17:27:46+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:46+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:46+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:46+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:48+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:48.6279811 +0800 CST m=+240.793119501"
+t=2018-09-10T17:27:48+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:48+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:48+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:48+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:51+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:51.1312466 +0800 CST m=+243.296385001"
+t=2018-09-10T17:27:51+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:51+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:51+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:51+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:53+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:53.6365529 +0800 CST m=+245.801691401"
+t=2018-09-10T17:27:53+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:53+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:53+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:53+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:56+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:56.1478405 +0800 CST m=+248.312979001"
+t=2018-09-10T17:27:56+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:56+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:56+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:56+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:27:58+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:27:58.6531823 +0800 CST m=+250.818320801"
+t=2018-09-10T17:27:58+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:27:58+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:27:58+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:27:58+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:28:01+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:28:01.1574832 +0800 CST m=+253.322621701"
+t=2018-09-10T17:28:01+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:28:01+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:28:01+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:28:01+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
+t=2018-09-10T17:28:03+0800 lvl=info msg="Remove an expired pending obj"                      type=pong deadline="2018-09-10 17:28:03.6617595 +0800 CST m=+255.826898001"
+t=2018-09-10T17:28:03+0800 lvl=dbug msg="[Table]: K-bucket 的刷新结束."
+t=2018-09-10T17:28:03+0800 lvl=dbug msg="[Table]: 请求刷新 K-bucket."
+t=2018-09-10T17:28:03+0800 lvl=dbug msg="[Table]: 处理 K-bucket 的刷新请求"                         refreshDone=<nil>
+t=2018-09-10T17:28:03+0800 lvl=dbug msg="[Table]: 启动 doRefresh() 例程"
