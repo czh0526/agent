@@ -187,14 +187,14 @@ func (t *udp) loop() {
 		case p := <-t.addpending:
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
-			log.Info("addpending <== msg.", "type", getTypeString(p.ptype), "time", p.deadline, "from", p.from[:8])
+			log.Info("addpending <== msg.", "type", getTypeString(p.ptype), "time", p.deadline, "from", fmt.Sprintf("%x...", p.from[:8]))
 
 		case r := <-t.gotreply:
 			log.Info("gotreply <== msg.", "type", getTypeString(r.ptype), "plist.Len()", plist.Len())
 			var matched bool
 			for el := plist.Front(); el != nil; el = el.Next() {
 				p := el.Value.(*pending)
-				log.Info("调试", "p.from", p.from[:8], "r.from", r.from[:8], "p.ptype", p.ptype, "r.ptype", r.ptype)
+				log.Info("调试", "p.from", fmt.Sprintf("%x...", p.from[:8]), "p.ptype", p.ptype, "r.from", fmt.Sprintf("%x...", r.from[:8]), "r.ptype", r.ptype)
 				if p.from == r.from && p.ptype == r.ptype {
 					log.Info("1")
 					matched = true
