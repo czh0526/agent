@@ -55,6 +55,7 @@ func (p *Peer) readLoop(readErr chan<- error) {
 	for {
 		if _, err := p.rw.fd.Read(buf); err != nil {
 			log.Error("peer receive ping msg error", "error", err)
+			<-time.After(time.Second)
 		}
 	}
 }
