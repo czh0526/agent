@@ -188,22 +188,20 @@ func (t *udp) loop() {
 		case p := <-t.addpending:
 			p.deadline = time.Now().Add(respTimeout)
 			plist.PushBack(p)
-			log.Info("addpending <== msg.", "type", getTypeString(p.ptype), "time", p.deadline, "from", fmt.Sprintf("%x...", p.from[:8]))
+			log.Trace("addpending <== msg.", "type", getTypeString(p.ptype), "time", p.deadline, "from", fmt.Sprintf("%x...", p.from[:8]))
 
 		case r := <-t.gotreply:
-			log.Info("gotreply <== msg.", "type", getTypeString(r.ptype), "plist.Len()", plist.Len())
+			log.Trace("gotreply <== msg.", "type", getTypeString(r.ptype), "plist.Len()", plist.Len())
 			var matched bool
 			for el := plist.Front(); el != nil; el = el.Next() {
 				p := el.Value.(*pending)
-				log.Info("调试", "p.from", fmt.Sprintf("%x...", p.from[:8]), "p.ptype", p.ptype, "r.from", fmt.Sprintf("%x...", r.from[:8]), "r.ptype", r.ptype)
+				log.Trace("调试", "p.from", fmt.Sprintf("%x...", p.from[:8]), "p.ptype", p.ptype, "r.from", fmt.Sprintf("%x...", r.from[:8]), "r.ptype", r.ptype)
 				if p.from == r.from && p.ptype == r.ptype {
-					log.Info("1")
 					matched = true
 					if p.callback(r.data) {
-						log.Info("2")
 						p.errc <- nil
 						plist.Remove(el)
-						log.Info("得到一个消息，从 pending 队列中删除.", "type", getTypeString(p.ptype), "time", p.deadline)
+						log.Trace("得到一个消息，从 pending 队列中删除.", "type", getTypeString(p.ptype), "time", p.deadline)
 					}
 					contTimeouts = 0
 				}
@@ -219,7 +217,7 @@ func (t *udp) loop() {
 				if now.After(p.deadline) || now.Equal(p.deadline) {
 					p.errc <- errTimeout
 					plist.Remove(el)
-					log.Info("删除过期的 pending 消息.",
+					log.Trace("删除过期的 pending 消息.",
 						"type", getTypeString(p.ptype),
 						"from", fmt.Sprintf("%x...", p.from[:8]),
 						"deadline", fmt.Sprintf("%v", p.deadline))
@@ -278,14 +276,14 @@ func (t *udp) handlePacket(from *net.UDPAddr, buf []byte) error {
 		return err
 	}
 
-	printPacket("[udp]: <<", fromID, packet)
+	printPacket(fromID, from, packet)
 
 	err = packet.handle(t, from, fromID, hash)
 	return err
 }
 
-func printPacket(prefix string, fromID NodeID, packet packet) {
-	log.Trace(fmt.Sprintf("%v %v <= 0x%x...", prefix, packet.name(), fromID[:8]))
+func printPacket(fromID NodeID, from *net.UDPAddr, packet packet) {
+	log.Debug(fmt.Sprintf("[udp]: << %v <== 0x%x...@%v:%v", packet.name(), fromID[:8], from.IP, from.Port))
 }
 
 func (t *udp) Stop() {
@@ -400,7 +398,7 @@ func (t *udp) send(toaddr *net.UDPAddr, ptype byte, req packet) ([]byte, error) 
 // 单纯的发送数据包逻辑
 func (t *udp) write(toaddr *net.UDPAddr, what string, packet []byte) error {
 	_, err := t.conn.WriteToUDP(packet, toaddr)
-	log.Trace(fmt.Sprintf("[udp]: >> %v , addr = %v, err = %v", what, toaddr, err))
+	log.Debug(fmt.Sprintf("[udp]: >> %v ==> %v, err = %v", what, toaddr, err))
 	return err
 }
 

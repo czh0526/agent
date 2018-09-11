@@ -489,10 +489,13 @@ func (tab *Table) bond(pinged bool, id NodeID, addr *net.UDPAddr, tcpPort uint16
 		return nil, nil
 	}
 
+	log.Debug("***********************")
+	log.Debug("*      bond()         *")
+	log.Debug("***********************")
 	if pinged {
-		log.Trace("[UDP]: 进入 bond 过程 --> 响应 ping 消息 ...")
+		log.Debug(fmt.Sprintf("[UDP]: 被动绑定节点, NodeID = 0x%x... , addr = %v.", id[:8], addr))
 	} else {
-		log.Trace("[UDP]: 进入 bond 过程 --> 发起 ping 消息 ... ")
+		log.Debug(fmt.Sprintf("[UDP]: 主动绑定节点, NodeID = 0x%x... , addr = %v.", id[:8], addr))
 	}
 	if pinged && !tab.isInitDone() {
 		return nil, errors.New("still initializing")
