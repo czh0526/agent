@@ -44,6 +44,7 @@ func (p *Peer) pingLoop() {
 			if _, err := p.rw.fd.Write([]byte("ping")); err != nil {
 				log.Error("peer send ping msg error", "error", err)
 			}
+			log.Debug("[peer]: send ping msg.")
 		}
 	}
 }
@@ -57,5 +58,6 @@ func (p *Peer) readLoop(readErr chan<- error) {
 			log.Error("peer receive ping msg error", "error", err)
 			<-time.After(time.Second)
 		}
+		log.Debug("[peer]: receive ping msg.")
 	}
 }
