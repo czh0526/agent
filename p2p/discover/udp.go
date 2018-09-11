@@ -410,6 +410,10 @@ func (t *udp) nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) {
 		return nil, errors.New("low port")
 	}
 
+	if err := netutil.CheckRelayIP(sender.IP, rn.IP) (*Node, error) {
+		return nil, err 
+	}
+
 	n := NewNode(rn.ID, rn.IP, rn.UDP, rn.TCP)
 	err := n.validateComplete()
 	return n, err
@@ -619,7 +623,11 @@ func (req *findnode) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte
 	var sent bool
 
 	for _, n := range closest {
-		p.Nodes = append(p.Nodes, nodeToRPC(n))
+		if netutil.CheckRelayIP(from.IP, n.IP) == nil {
+			p.Nodes = append(p.Nodes, nodeToRPC(n))
+		}else {
+			log.Debug("[udp]: 删除特殊 IP 地址的节点", "ip", n.IP)
+		}
 		if len(p.Nodes) == maxNeighbors {
 			t.send(from, neighborsPacket, &p)
 			p.Nodes = p.Nodes[:0]
