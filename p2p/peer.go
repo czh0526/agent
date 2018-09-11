@@ -34,7 +34,7 @@ func (p *Peer) run() {
 }
 
 func (p *Peer) pingLoop() {
-	ping := time.NewTimer(pingInterval)
+	ping := time.NewTicker(pingInterval)
 	defer p.wg.Done()
 	defer ping.Stop()
 
