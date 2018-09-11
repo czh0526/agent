@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	pingInterval = 15 * time.Second
+	pingInterval = 5 * time.Second
 )
 
 type Peer struct {
