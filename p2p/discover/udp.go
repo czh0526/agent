@@ -11,6 +11,7 @@ import (
 
 	"github.com/czh0526/agent/crypto"
 	"github.com/czh0526/agent/log"
+	"github.com/czh0526/agent/p2p/netutil"
 
 	"github.com/czh0526/agent/rlp"
 )
@@ -410,8 +411,8 @@ func (t *udp) nodeFromRPC(sender *net.UDPAddr, rn rpcNode) (*Node, error) {
 		return nil, errors.New("low port")
 	}
 
-	if err := netutil.CheckRelayIP(sender.IP, rn.IP) (*Node, error) {
-		return nil, err 
+	if err := netutil.CheckRelayIP(sender.IP, rn.IP); err != nil {
+		return nil, err
 	}
 
 	n := NewNode(rn.ID, rn.IP, rn.UDP, rn.TCP)
@@ -625,7 +626,7 @@ func (req *findnode) handle(t *udp, from *net.UDPAddr, fromID NodeID, mac []byte
 	for _, n := range closest {
 		if netutil.CheckRelayIP(from.IP, n.IP) == nil {
 			p.Nodes = append(p.Nodes, nodeToRPC(n))
-		}else {
+		} else {
 			log.Debug("[udp]: 删除特殊 IP 地址的节点", "ip", n.IP)
 		}
 		if len(p.Nodes) == maxNeighbors {
