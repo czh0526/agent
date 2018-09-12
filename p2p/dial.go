@@ -325,6 +325,9 @@ var (
 
 func (s *dialstate) checkDial(n *discover.Node, peers map[discover.NodeID]*Peer) error {
 	fmt.Printf("校验拨号任务：==> %v \n", n.IP)
+	for id, p := range peers {
+		fmt.Printf("    p.id = %x..., p.ip = %v \n", id[:8], p.rw.fd.RemoteAddr())
+	}
 	_, dialing := s.dialing[n.ID]
 	switch {
 	case dialing:
@@ -337,7 +340,7 @@ func (s *dialstate) checkDial(n *discover.Node, peers map[discover.NodeID]*Peer)
 		fmt.Printf("向自身拨号: ==> %v \n", n.IP)
 		return errSelf
 	case s.hist.contains(n.ID):
-		fmt.Printf("正常: ==> %v", n.IP)
+		fmt.Printf("正常: ==> %v \n", n.IP)
 		return errRecentlyDialed
 	}
 	return nil
