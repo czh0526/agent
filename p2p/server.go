@@ -181,7 +181,7 @@ running:
 }
 
 func (self *P2PServer) SetupConn(fd net.Conn, flag connFlag, node *discover.Node) error {
-	c := &conn{fd: fd, flags: flag}
+	c := &conn{fd: fd, flags: flag, id: node.ID}
 	err := self.setupConn(c)
 	if err != nil {
 		return err
