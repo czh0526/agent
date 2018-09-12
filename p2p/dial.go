@@ -324,15 +324,20 @@ var (
 )
 
 func (s *dialstate) checkDial(n *discover.Node, peers map[discover.NodeID]*Peer) error {
+	fmt.Printf("校验拨号任务：==> %v \n", n.IP)
 	_, dialing := s.dialing[n.ID]
 	switch {
 	case dialing:
+		fmt.Printf("正在拨号: ==> %v \n", n.IP)
 		return errAlreadyDialing
 	case peers[n.ID] != nil:
+		fmt.Printf("已经建立连接: ==> %v \n", n.IP)
 		return errAlreadyConnected
 	case s.ntab != nil && n.ID == s.ntab.Self().ID:
+		fmt.Printf("向自身拨号: ==> %v \n", n.IP)
 		return errSelf
 	case s.hist.contains(n.ID):
+		fmt.Printf("正常: ==> %v", n.IP)
 		return errRecentlyDialed
 	}
 	return nil
