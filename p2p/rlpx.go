@@ -61,9 +61,9 @@ type plainDecoder interface {
 }
 
 func (msg *authMsgV4) sealPlain(h *encHandshake) ([]byte, error) {
-	buf := make([]byte, authMsgLen)
-	n := copy(buf, msg.InitiatorPubkey[:])
-	buf[n] = 0
+	buf := make([]byte, authMsgLen+2)
+	binary.BigEndian.PutUint16(buf[:], authMsgLen)
+	copy(buf[2:], msg.InitiatorPubkey[:])
 	return buf, nil
 }
 
@@ -74,9 +74,9 @@ func (msg *authMsgV4) decodePlain(input []byte) {
 }
 
 func (msg *authRespV4) sealPlain(h *encHandshake) ([]byte, error) {
-	buf := make([]byte, authRespLen)
-	n := copy(buf, msg.ReceiverPubkey[:])
-	buf[n] = 0
+	buf := make([]byte, authRespLen+2)
+	binary.BigEndian.PutUint16(buf[:], authRespLen)
+	copy(buf[2:], msg.ReceiverPubkey[:])
 	return buf, nil
 }
 
@@ -196,7 +196,6 @@ func readHandshakeMsg(msg plainDecoder, r io.Reader) error {
 	log.Debug("read prefix ... ")
 	prefix := make([]byte, 2)
 	if _, err := io.ReadFull(r, prefix); err != nil {
-		panic(err)
 		return err
 	}
 
