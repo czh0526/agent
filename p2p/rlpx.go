@@ -162,6 +162,7 @@ func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byt
 	log.Debug("receiverEncHandshake() ")
 	authMsg := new(authMsgV4)
 	if err := readHandshakeMsg(authMsg, conn); err != nil {
+		panic(err)
 		return s, err
 	}
 	log.Debug("read handshake msg")
@@ -195,6 +196,7 @@ func readHandshakeMsg(msg plainDecoder, r io.Reader) error {
 	log.Debug("read prefix ... ")
 	prefix := make([]byte, 2)
 	if _, err := io.ReadFull(r, prefix); err != nil {
+		panic(err)
 		return err
 	}
 
