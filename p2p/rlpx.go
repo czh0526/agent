@@ -137,10 +137,14 @@ func initiatorEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, remoteID d
 	if err != nil {
 		return s, err
 	}
+
 	// 发送消息
-	if _, err = conn.Write(authPacket); err != nil {
+	var n = 0
+	if n, err = conn.Write(authPacket); err != nil {
 		return s, err
 	}
+	log.Debug("write msg", "n", n)
+
 	// 接收 authRespV4
 	authRespMsg := new(authRespV4)
 	if err := readHandshakeMsg(authRespMsg, conn); err != nil {
