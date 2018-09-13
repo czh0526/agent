@@ -1,6 +1,7 @@
 package p2p
 
 import (
+	"crypto/ecdsa"
 	"fmt"
 	"net"
 	"path/filepath"
@@ -18,18 +19,23 @@ const (
 )
 
 type P2PServer struct {
+	PrivateKey      *ecdsa.PrivateKey
 	ListenAddr      string
 	MaxPeers        int
 	MaxPendingPeers int
-	listener        net.Listener
-	ntab            discoverTable
-	dialer          NodeDialer
+
+	newTransport func(net.Conn) transport
+
+	listener net.Listener
+	ntab     discoverTable
+	dialer   NodeDialer
 
 	running bool
 	quit    chan struct{}
 	addpeer chan *conn
 
 	loopWG sync.WaitGroup
+	log    log.Logger
 }
 
 func NewServer() Server {
@@ -37,8 +43,10 @@ func NewServer() Server {
 		ListenAddr:      "0.0.0.0:65353",
 		MaxPeers:        10,
 		MaxPendingPeers: 3,
+		newTransport:    newRLPX,
 		running:         false,
 		quit:            make(chan struct{}),
+		log:             log.New(),
 	}
 }
 
@@ -80,6 +88,7 @@ func (self *P2PServer) Start() error {
 	if err != nil {
 		return err
 	}
+	self.PrivateKey = privateKey
 	log.Info("加载 nodekey", "NodeID", discover.PubkeyID(&privateKey.PublicKey).String())
 
 	nodeDBPath, err := filepath.Abs("./nodes")
@@ -180,24 +189,35 @@ running:
 	fmt.Println("[P2PServer] -> listenLoop(): exited.")
 }
 
-func (self *P2PServer) SetupConn(fd net.Conn, flag connFlag, node *discover.Node) error {
-	c := &conn{fd: fd, flags: flag, id: node.ID}
-	err := self.setupConn(c)
+func (self *P2PServer) SetupConn(fd net.Conn, flags connFlag, dialDest *discover.Node) error {
+	c := &conn{fd: fd, transport: self.newTransport(fd), flags: flags}
+	err := self.setupConn(c, flags, dialDest)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (self *P2PServer) setupConn(c *conn) error {
+func (self *P2PServer) setupConn(c *conn, flags connFlag, dialDest *discover.Node) error {
+	var err error
+	if c.id, err = c.doEncHandshake(self.PrivateKey, dialDest); err != nil {
+		self.log.Error("Failed RLPx handshake", "addr", c.fd.RemoteAddr(), "err", err)
+		return err
+	}
+
 	self.addpeer <- c
 	return nil
 }
 
 type conn struct {
-	fd    net.Conn
+	fd net.Conn
+	transport
 	flags connFlag
 	id    discover.NodeID
+}
+
+type transport interface {
+	doEncHandshake(prv *ecdsa.PrivateKey, dialDest *discover.Node) (discover.NodeID, error)
 }
 
 func (c *conn) is(f connFlag) bool {

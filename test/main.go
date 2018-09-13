@@ -1,14 +1,43 @@
 package main
 
 import (
+	"crypto/md5"
 	"encoding/binary"
 	"fmt"
+	"io"
+	"os"
+	"runtime"
 )
 
 func main() {
 	//testChannel()
 	//testNilChannel()
-	testVariant()
+	//testVariant()
+	testMd5()
+}
+
+func testMd5() {
+	md5hasher := md5.New()
+	f, err := os.OpenFile("E:\\迅雷下载\\movie\\111.rmvb", os.O_RDONLY, 0666)
+	if err != nil {
+		panic(err)
+	}
+
+	var ms runtime.MemStats
+	runtime.ReadMemStats(&ms)
+	fmt.Println(ms.Frees)
+
+	n, err := io.Copy(md5hasher, f)
+	if err != nil {
+		panic(err)
+	}
+	md5hash := md5hasher.Sum(nil)
+
+	runtime.ReadMemStats(&ms)
+	fmt.Println(ms.Frees)
+
+	fmt.Printf("写入 %v 字节 \n", n)
+	fmt.Printf("MD5 = 0x%x", md5hash)
 }
 
 func testVariant() {
