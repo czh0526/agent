@@ -188,16 +188,20 @@ func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byt
 }
 
 func readHandshakeMsg(msg plainDecoder, r io.Reader) error {
+	log.Debug("read prefix ... ")
 	prefix := make([]byte, 2)
 	if _, err := io.ReadFull(r, prefix); err != nil {
 		return err
 	}
 
 	size := binary.BigEndian.Uint16(prefix)
+	log.Debug(fmt.Sprintf("read %v bytes message ...", size))
+
 	buf := make([]byte, size)
 	if _, err := io.ReadFull(r, buf); err != nil {
 		return err
 	}
+	log.Debug("read message into buf ... ")
 
 	s := rlp.NewStream(bytes.NewReader(buf), 0)
 	return s.Decode(msg)
