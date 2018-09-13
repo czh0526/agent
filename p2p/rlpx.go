@@ -8,6 +8,7 @@ import (
 	"io"
 	"net"
 
+	"github.com/czh0526/agent/log"
 	"github.com/czh0526/agent/p2p/discover"
 	"github.com/czh0526/agent/rlp"
 	"github.com/czh0526/blockchain/crypto"
@@ -122,6 +123,7 @@ func (t *rlpx) doEncHandshake(prv *ecdsa.PrivateKey, dial *discover.Node) (disco
 }
 
 func initiatorEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, remoteID discover.NodeID, token []byte) (s secrets, err error) {
+	log.Debug("initiatorEncHandshake()")
 	// 构造 handshake 对象
 	h := &encHandshake{initiator: true, remoteID: remoteID}
 
@@ -153,14 +155,18 @@ func initiatorEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, remoteID d
 }
 
 func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byte) (s secrets, err error) {
+	log.Debug("receiverEncHandshake() ")
 	authMsg := new(authMsgV4)
 	if err := readHandshakeMsg(authMsg, conn); err != nil {
 		return s, err
 	}
+	log.Debug("read handshake msg")
+
 	h := new(encHandshake)
 	if err := h.handleAuthMsg(authMsg, prv); err != nil {
 		return s, err
 	}
+	log.Debug("handle auth msg")
 
 	authRespMsg, err := h.makeAuthResp(prv)
 	if err != nil {
@@ -171,10 +177,12 @@ func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byt
 	if err != nil {
 		return s, err
 	}
+	log.Debug("seal plain auth resp ")
 
 	if _, err = conn.Write(authRespPacket); err != nil {
 		return s, err
 	}
+	log.Debug("send auth resp msg.")
 
 	return h.secrets(authMsg, authRespMsg)
 }
