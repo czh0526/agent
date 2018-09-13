@@ -340,9 +340,10 @@ func (s *dialstate) checkDial(n *discover.Node, peers map[discover.NodeID]*Peer)
 		fmt.Printf("向自身拨号: ==> %v \n", n.IP)
 		return errSelf
 	case s.hist.contains(n.ID):
-		fmt.Printf("正常: ==> %v \n", n.IP)
+		fmt.Printf("间隔太近: ==> %v \n", n.IP)
 		return errRecentlyDialed
 	}
+	fmt.Printf("正常：==> %v \n", n.IP)
 	return nil
 }
 
