@@ -61,9 +61,13 @@ type plainDecoder interface {
 }
 
 func (msg *authMsgV4) sealPlain(h *encHandshake) ([]byte, error) {
-	buf := make([]byte, authMsgLen+2)
-	binary.BigEndian.PutUint16(buf[:], authMsgLen)
-	copy(buf[2:], msg.InitiatorPubkey[:])
+	rpub, err := rlp.EncodeToBytes(msg)
+	if err != nil {
+		return []byte{}, err
+	}
+	buf := make([]byte, len(rpub)+2)
+	binary.BigEndian.PutUint16(buf[:], uint16(len(rpub)))
+	copy(buf[2:], rpub)
 	return buf, nil
 }
 
@@ -74,9 +78,13 @@ func (msg *authMsgV4) decodePlain(input []byte) {
 }
 
 func (msg *authRespV4) sealPlain(h *encHandshake) ([]byte, error) {
-	buf := make([]byte, authRespLen+2)
-	binary.BigEndian.PutUint16(buf[:], authRespLen)
-	copy(buf[2:], msg.ReceiverPubkey[:])
+	rpub, err := rlp.EncodeToBytes(msg)
+	if err != nil {
+		return []byte{}, err
+	}
+	buf := make([]byte, len(rpub)+2)
+	binary.BigEndian.PutUint16(buf[:], uint16(len(rpub)))
+	copy(buf[2:], rpub)
 	return buf, nil
 }
 
@@ -162,7 +170,6 @@ func receiverEncHandshake(conn io.ReadWriter, prv *ecdsa.PrivateKey, token []byt
 	log.Debug("receiverEncHandshake() ")
 	authMsg := new(authMsgV4)
 	if err := readHandshakeMsg(authMsg, conn); err != nil {
-		panic(err)
 		return s, err
 	}
 	log.Debug("read handshake msg")
