@@ -281,9 +281,40 @@ func (tab *Table) lookup(targetID NodeID, refreshIfEmpty bool) []*Node {
 	return result.entries
 }
 
-func (t *Table) ReadRandomNodes([]*Node) int {
-	fmt.Println("discoveryTable.ReadRandomNodes() was called...")
-	return 0
+func (tab *Table) ReadRandomNodes(buf []*Node) int {
+	// 收集全部的节点, 放入二维数组
+	var buckets [][]*Node
+	for _, b := range tab.buckets {
+		if len(b.entries) > 0 {
+			buckets = append(buckets, b.entries[:])
+		}
+	}
+	if len(buckets) == 0 {
+		return 0
+	}
+
+	// 为全部节点洗牌，打乱第一维的顺序
+	for i := len(buckets) - 1; i > 0; i-- {
+		j := tab.rand.Intn(len(buckets))
+		buckets[i], buckets[j] = buckets[j], buckets[i]
+	}
+
+	var i int // buf 的索引
+	var j int // buckets 的索引
+	for ; i < len(buf); i, j = i+1, (j+1)%len(buckets) {
+		b := buckets[j]
+		buf[i] = &(*b[0])
+		buckets[j] = b[1:]
+		// 如果 buckets[j] 只有一个元素，取出该元素后，移除该数组
+		if len(b) == 1 {
+			buckets = append(buckets[:j], buckets[j+1:]...)
+		}
+		// 如果移除了全部数组，结束函数
+		if len(buckets) == 0 {
+			break
+		}
+	}
+	return i + 1
 }
 
 // 遍历k-bucket, 取出离 target 最近的 nresults 个节点
