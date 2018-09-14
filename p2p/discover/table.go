@@ -445,7 +445,7 @@ func (tab *Table) loadSeedNodes(bond bool) {
 	for i := range seeds {
 		seed := seeds[i]
 		tab.add(seed)
-		log.Debug("[Table]: 加入一个 seed node.", "Node IP", seed.IP)
+		log.Debug(fmt.Sprintf("[Table]: 加入一个 seed node: %v", seed.IP))
 	}
 }
 
@@ -562,7 +562,7 @@ func (tab *Table) bond(pinged bool, id NodeID, addr *net.UDPAddr, tcpPort uint16
 
 	if node != nil {
 		tab.add(node)
-		log.Debug("[Table]: 加入一个 node.", "Node IP", node.IP)
+		log.Debug(fmt.Sprintf("[Table]: 加入一个 node: ", node.IP))
 	}
 	return node, result
 }

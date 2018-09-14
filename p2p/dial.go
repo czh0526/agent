@@ -296,7 +296,7 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 			needDynDials--
 		}
 	}
-	fmt.Printf("[dialstate] -> newTasks(): 从 lookupBuf 中构建了 %v 个任务. \n", i)
+	fmt.Printf("[dialstate] -> newTasks(): 从 lookupBuf(%v个节点) 中构建了 %v 个任务. \n", len(s.lookupBuf), i)
 
 	// discoverTask ==> newtasks
 	s.lookupBuf = s.lookupBuf[:copy(s.lookupBuf, s.lookupBuf[i:])]
