@@ -11,8 +11,8 @@ import (
 	"github.com/czh0526/agent/log"
 	"github.com/czh0526/agent/p2p/discover"
 	"github.com/czh0526/agent/rlp"
-	"github.com/czh0526/blockchain/crypto"
-	"github.com/czh0526/blockchain/crypto/ecies"
+	"github.com/czh0526/agent/crypto"
+	"github.com/czh0526/agent/crypto/ecies"
 )
 
 const (

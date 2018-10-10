@@ -11,6 +11,7 @@ import (
 	"github.com/czh0526/agent/crypto"
 	"github.com/czh0526/agent/log"
 	"github.com/czh0526/agent/p2p/discover"
+	"github.com/czh0526/agent/params"
 )
 
 const (
@@ -30,15 +31,16 @@ type P2PServer struct {
 	ntab     discoverTable
 	dialer   NodeDialer
 
-	running bool
-	quit    chan struct{}
-	addpeer chan *conn
+	running   bool
+	quit      chan struct{}
+	addpeer   chan *conn
+	Protocols []Protocol
 
 	loopWG sync.WaitGroup
 	log    log.Logger
 }
 
-func NewServer() Server {
+func NewServer() *P2PServer {
 	return &P2PServer{
 		ListenAddr:      "0.0.0.0:65353",
 		MaxPeers:        10,
@@ -80,7 +82,7 @@ func (self *P2PServer) Start() error {
 	}
 
 	// 加载私钥
-	nodeKeyPath, err := filepath.Abs("./nodekey")
+	nodeKeyPath, err := filepath.Abs(filepath.Join(params.HomeDir, "nodekey"))
 	if err != nil {
 		return err
 	}
@@ -91,7 +93,7 @@ func (self *P2PServer) Start() error {
 	self.PrivateKey = privateKey
 	log.Info("加载 nodekey", "NodeID", discover.PubkeyID(&privateKey.PublicKey).String())
 
-	nodeDBPath, err := filepath.Abs("./nodes")
+	nodeDBPath, err := filepath.Abs(filepath.Join(params.HomeDir, "nodes"))
 	if err != nil {
 		return err
 	}
@@ -247,7 +249,7 @@ func (self *P2PServer) run(dialstate dialer) {
 		}
 	}
 
-	// 将 ts 集合拆分成 runningTasks 和 queuedTasks
+	// 启动 ts 中的任务，让 runningTasks 中的任务数量尽量饱满
 	startTasks := func(ts []task) (rest []task) {
 		i := 0
 		for ; len(runningTasks) < maxActiveDialTasks && i < len(ts); i++ {
@@ -262,9 +264,12 @@ func (self *P2PServer) run(dialstate dialer) {
 		return ts[i:]
 	}
 
+	// 如果 queuedTasks 不能让 runningTasks 尽量饱满，
+	// 构建新的 Task 集合，填充 runningTasks 和 queuedTasks
 	scheduleTasks := func() {
-		// queuedTasks 中移除
+		// queuedTasks ==> runningTasks
 		queuedTasks = append(queuedTasks[:0], startTasks(queuedTasks)...)
+		// 如果 runningTask 没跑满
 		if len(runningTasks) < maxActiveDialTasks {
 			// 新构建一批任务
 			nt := dialstate.newTasks(len(runningTasks)+len(queuedTasks), peers, time.Now())
@@ -277,7 +282,7 @@ func (self *P2PServer) run(dialstate dialer) {
 running:
 	for {
 		log.Trace("P2PServer.run() ->", "peer number", len(peers))
-		<-time.After(time.Second * 3)
+		//<-time.After(time.Second * 3)
 		scheduleTasks() // 如果未能成功启动 Task,
 
 		// 监听外部退出事件
@@ -307,6 +312,10 @@ func (self *P2PServer) Stop() error {
 	close(self.quit)      // 关闭 run()
 	self.ntab.Close()     // 关闭 discoverTable
 	return nil
+}
+
+func (self *P2PServer) IsRunning() bool {
+	return self.running
 }
 
 func (self *P2PServer) Dialer() NodeDialer {

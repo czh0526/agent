@@ -2,6 +2,7 @@ package crypto
 
 import (
 	"crypto/ecdsa"
+	"crypto/elliptic"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -55,6 +56,13 @@ func ToECDSA(d []byte) (*ecdsa.PrivateKey, error) {
 		return nil, errors.New("invalid private key")
 	}
 	return priv, nil
+}
+
+func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
+	if pub == nil || pub.X == nil || pub.Y == nil {
+		return nil
+	}
+	return elliptic.Marshal(S256(), pub.X, pub.Y)
 }
 
 // 返回值是 256 位的 byte(32个)

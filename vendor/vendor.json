@@ -19,6 +19,54 @@
 			"revisionTime": "2018-05-18T05:39:59Z"
 		},
 		{
+			"checksumSHA1": "unX3YAHFGPudIwK1wB2R0AKDFSg=",
+			"path": "github.com/mitchellh/go-homedir",
+			"revision": "ae18d6b8b3205b561c79e8e5f69bff09736185f4",
+			"revisionTime": "2018-08-24T00:42:36Z"
+		},
+		{
+			"checksumSHA1": "y1dGSX0gQ/ey4iHdTorLsbenHKY=",
+			"path": "github.com/robertkrimen/otto",
+			"revision": "6a77b7cbc37d0c39f7d5fa5766826e541df31fd5",
+			"revisionTime": "2017-02-05T01:36:59Z"
+		},
+		{
+			"checksumSHA1": "yPk7CP14otQHh23dmGBYFWhVzNc=",
+			"path": "github.com/robertkrimen/otto/ast",
+			"revision": "6a77b7cbc37d0c39f7d5fa5766826e541df31fd5",
+			"revisionTime": "2017-02-05T01:36:59Z"
+		},
+		{
+			"checksumSHA1": "Ih8IyrcvYIRe1H1BbExbHs+s8kM=",
+			"path": "github.com/robertkrimen/otto/dbg",
+			"revision": "6a77b7cbc37d0c39f7d5fa5766826e541df31fd5",
+			"revisionTime": "2017-02-05T01:36:59Z"
+		},
+		{
+			"checksumSHA1": "FnQzQouypvp1tUyPE3mYbWNH6es=",
+			"path": "github.com/robertkrimen/otto/file",
+			"revision": "6a77b7cbc37d0c39f7d5fa5766826e541df31fd5",
+			"revisionTime": "2017-02-05T01:36:59Z"
+		},
+		{
+			"checksumSHA1": "61W7S2mWb4DujuqG2msycPC+Q2E=",
+			"path": "github.com/robertkrimen/otto/parser",
+			"revision": "6a77b7cbc37d0c39f7d5fa5766826e541df31fd5",
+			"revisionTime": "2017-02-05T01:36:59Z"
+		},
+		{
+			"checksumSHA1": "i9dRdlVYwqPt0PTRnJS6GxKoCRw=",
+			"path": "github.com/robertkrimen/otto/registry",
+			"revision": "6a77b7cbc37d0c39f7d5fa5766826e541df31fd5",
+			"revisionTime": "2017-02-05T01:36:59Z"
+		},
+		{
+			"checksumSHA1": "KJp6P0GEODVBpNGqY8Scn+Q/0lg=",
+			"path": "github.com/robertkrimen/otto/token",
+			"revision": "6a77b7cbc37d0c39f7d5fa5766826e541df31fd5",
+			"revisionTime": "2017-02-05T01:36:59Z"
+		},
+		{
 			"path": "github.com/syndtr/goleveldb.git",
 			"revision": "ae2bd5eed72d46b28834ec3f60db3a3ebedd8dbd",
 			"version": "ae2bd5eed72d46b28834ec3f60db3a3ebedd8dbd"
@@ -94,6 +142,30 @@
 			"path": "github.com/syndtr/goleveldb/leveldb/util",
 			"revision": "ae2bd5eed72d46b28834ec3f60db3a3ebedd8dbd",
 			"revisionTime": "2018-08-15T03:29:40Z"
+		},
+		{
+			"checksumSHA1": "GawkAYw670ZS+f0D17MYNps41QA=",
+			"path": "gopkg.in/fatih/set.v0",
+			"revision": "27c40922c40b43fe04554d8223a402af3ea333f3",
+			"revisionTime": "2014-12-10T08:48:24Z"
+		},
+		{
+			"checksumSHA1": "2qFBBtdJlljXG9S1E03OiRf/gsM=",
+			"path": "gopkg.in/natefinch/npipe.v2",
+			"revision": "c1b8fa8bdccecb0b8db834ee0b92fdbcfa606dd6",
+			"revisionTime": "2016-06-21T03:49:01Z"
+		},
+		{
+			"checksumSHA1": "pSRJpgNXXmuUf88IhYYNhM+crAU=",
+			"path": "gopkg.in/sourcemap.v1",
+			"revision": "6e83acea0053641eff084973fee085f0c193c61a",
+			"revisionTime": "2017-02-13T14:20:43Z"
+		},
+		{
+			"checksumSHA1": "QTUPNivWNIxDv91cgj4V4p6xXFA=",
+			"path": "gopkg.in/sourcemap.v1/base64vlq",
+			"revision": "6e83acea0053641eff084973fee085f0c193c61a",
+			"revisionTime": "2017-02-13T14:20:43Z"
 		},
 		{
 			"checksumSHA1": "uja6BKCN3ngSeXQE7te2vq4bKro=",

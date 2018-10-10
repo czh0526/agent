@@ -3,22 +3,29 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
-	"github.com/czh0526/agent/log"
-
 	"github.com/czh0526/agent/agent"
-
+	"github.com/czh0526/agent/log"
+	"github.com/czh0526/agent/params"
+	"github.com/czh0526/agent/proton"
 	cli "gopkg.in/urfave/cli.v1"
 )
 
 var (
 	app         = cli.NewApp()
+	nodeFlags   = []cli.Flag{}
+	rpcFlags    = []cli.Flag{}
 	globalAgent Agent
 )
 
 func init() {
 
+	app.Commands = []cli.Command{
+		attachCommand,
+		consoleCommand,
+	}
 	app.Flags = append(app.Flags, cli.IntFlag{
 		Name:  "verbosity",
 		Usage: "Logging verbosity: 0=silent, 1=error, 2=warn, 3=info, 4=debug, 5=detail",
@@ -33,7 +40,7 @@ func init() {
 	app.Action = startAgent
 	app.Before = func(ctx *cli.Context) error {
 		// 构造日志文件
-		fileHandler, err := log.FileHandler("./agent.log", log.LogfmtFormat())
+		fileHandler, err := log.FileHandler(filepath.Join(params.HomeDir, "agent.log"), log.LogfmtFormat())
 		if err != nil {
 			fmt.Printf("init log file error: %v", err)
 			os.Exit(-1)
@@ -80,7 +87,7 @@ func startAgent(ctx *cli.Context) error {
 		return err
 	}
 
-	// 持续运行 10 秒
+	// 持续运行
 	globalAgent.Wait()
 	log.Info("main.Action end.")
 
@@ -88,5 +95,20 @@ func startAgent(ctx *cli.Context) error {
 }
 
 func makeAgent(ctx *cli.Context) (Agent, error) {
-	return agent.NewAgent()
+	a, err := agent.NewAgent()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := registerProtonService(a); err != nil {
+		return nil, err
+	}
+
+	return a, nil
+}
+
+func registerProtonService(a *agent.Agent) error {
+	return a.Register(func() (agent.Service, error) {
+		return proton.New()
+	})
 }

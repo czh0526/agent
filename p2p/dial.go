@@ -146,7 +146,7 @@ type dialError struct {
 
 type task interface {
 	Type() string
-	Do(Server)
+	Do(*P2PServer)
 }
 
 type dialTask struct {
@@ -160,7 +160,7 @@ func (t *dialTask) Type() string {
 	return "dialTask"
 }
 
-func (t *dialTask) Do(srv Server) {
+func (t *dialTask) Do(srv *P2PServer) {
 	log.Debug("dialTask.Do()", "dest node", t.dest)
 	err := t.dial(srv, t.dest)
 	if err != nil {
@@ -168,7 +168,7 @@ func (t *dialTask) Do(srv Server) {
 	}
 }
 
-func (t *dialTask) dial(srv Server, dest *discover.Node) error {
+func (t *dialTask) dial(srv *P2PServer, dest *discover.Node) error {
 	fd, err := srv.Dialer().Dial(dest)
 	if err != nil {
 		return &dialError{err}
@@ -189,7 +189,7 @@ func (t *discoverTask) Type() string {
 	return "discoverTask"
 }
 
-func (t *discoverTask) Do(srv Server) {
+func (t *discoverTask) Do(srv *P2PServer) {
 	var target discover.NodeID
 	rand.Read(target[:])
 	t.results = srv.Lookup(target)
@@ -212,7 +212,7 @@ func (t waitExpireTask) Type() string {
 	return "waitExpireTask"
 }
 
-func (t waitExpireTask) Do(Server) {
+func (t waitExpireTask) Do(*P2PServer) {
 	time.Sleep(t.Duration)
 }
 
@@ -289,6 +289,7 @@ func (s *dialstate) newTasks(nRunning int, peers map[discover.NodeID]*Peer, now 
 		fmt.Printf("[dialstate] -> newTasks(): 从 discoverTable 中构建了 %v 个任务. \n", i)
 	}
 
+	fmt.Printf("[dialstate] -> newTasks(): 计划从 lookupBuf(%v个节点) 中构建任务. \n", len(s.lookupBuf))
 	// lookupBuf: dialTask ==> newtasks
 	i := 0
 	for ; i < len(s.lookupBuf) && needDynDials > 0; i++ {
