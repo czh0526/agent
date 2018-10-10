@@ -2,9 +2,11 @@ package rpc
 
 import (
 	"net"
+	"path/filepath"
 	"runtime"
 
 	"github.com/czh0526/agent/log"
+	"github.com/czh0526/agent/params"
 )
 
 func EndpointWS() string {
@@ -15,7 +17,7 @@ func EndpointIPC() string {
 	if runtime.GOOS == "windows" {
 		return `\\.\pipe\agent.ipc`
 	} else {
-		return `~/pipe/agent.ipc`
+		return filepath.Join(params.HomeDir, "/pipe/agent.ipc")
 	}
 }
 
