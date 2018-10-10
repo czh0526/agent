@@ -107,6 +107,7 @@ func makeAgent(ctx *cli.Context) (Agent, error) {
 	return a, nil
 }
 
+// 将服务的构造函数注册进 Agent
 func registerProtonService(a *agent.Agent) error {
 	return a.Register(func() (agent.Service, error) {
 		return proton.New()
