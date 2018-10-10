@@ -5,6 +5,7 @@
 *.exe
 *.test
 */debug
+cmd/cmd
 cmd/nodekey
 cmd/nodes
 cmd/agent.log
